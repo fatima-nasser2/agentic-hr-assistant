@@ -1,6 +1,6 @@
 from src.graph.graph import build_graph
 
-def test_rag(question: str):
+def test_full(question: str):
     graph = build_graph()
 
     initial_state = {
@@ -30,4 +30,14 @@ def test_rag(question: str):
     print(f"{'='*55}")
 
 if __name__ == "__main__":
-    test_rag("What happens with my benefits during leave?")
+    # Test 1 — Clean HR question
+    test_full("How many sick days do employees get?")
+
+    # Test 2 — Multi-part HR question
+    test_full("What is the parental leave policy and who is eligible?")
+
+    # Test 3 — Triggers retry loop
+    test_full("What happens with my benefits during leave?")
+
+    # Test 4 — Out of scope
+    test_full("What is the capital of France?")

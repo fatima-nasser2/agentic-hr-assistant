@@ -1,3 +1,5 @@
+import os
+from typing import List
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
@@ -149,10 +151,60 @@ def grader_node(state: GraphState) -> GraphState:
     return {**state, "relevance": result.relevance}
 
 # ── RESPONSE NODE ────────────────────────────────────────
+
+class ResponseOutput(BaseModel):
+    """Structured output for the final answer"""
+    answer: str = Field(
+        description="Grounded answer based strictly on the retrieved policy documents"
+    )
+    sources: List[str] = Field(
+        description="Filenames of the policy documents used to generate this answer"
+    )
+
 def response_node(state: GraphState) -> GraphState:
     print("💬 Response Agent: generating final answer...")
-    # Tomorrow: real answer generation
-    return {**state, "generation": "This is a placeholder answer."}
+
+    if state.get("relevance") == "not_relevant":
+        print("💬 Response Agent: no relevant docs found — returning fallback")
+        return {
+            **state,
+            "generation": (
+                "I couldn't find specific information about that in the HR policy documents. "
+                "Please contact the People Ops team for further assistance."
+            ),
+        }
+
+    question = state.get("rewritten_question") or state["question"]
+    documents = state["documents"]
+
+    formatted_docs = "\n\n".join(
+        f"[Source: {os.path.basename(doc.metadata.get('source', 'unknown'))}]\n{doc.page_content}"
+        for doc in documents
+    )
+
+    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+    structured_llm = llm.with_structured_output(ResponseOutput)
+
+    prompt = ChatPromptTemplate.from_messages([
+        ("system",
+         "You are an HR policy assistant for NovaTech Inc.\n\n"
+         "Answer the question using ONLY the provided policy excerpts.\n"
+         "Do NOT use any outside knowledge.\n"
+         "Be specific — include exact numbers, dates, or rules where available.\n"
+         "If the excerpts do not contain a complete answer, say so clearly.\n\n"
+         "Also list the source document filenames you drew from."),
+        ("human", "Question: {question}\n\nPolicy excerpts:\n{documents}")
+    ])
+
+    chain = prompt | structured_llm
+    result = chain.invoke({"question": question, "documents": formatted_docs})
+
+    sources_line = ", ".join(result.sources) if result.sources else "HR Policy Documents"
+    generation = f"{result.answer}\n\nSources: {sources_line}"
+
+    print(f"💬 Response Agent: answer generated from {len(result.sources)} source(s)")
+
+    return {**state, "generation": generation}
 
 # ── UNKNOWN NODE ─────────────────────────────────────────
 def unknown_node(state: GraphState) -> GraphState:
