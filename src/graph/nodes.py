@@ -100,10 +100,53 @@ def rag_node(state: GraphState) -> GraphState:
     }
 
 # ── GRADER NODE ──────────────────────────────────────────
+
+class GradeDecision(BaseModel):
+    """Structured output for relevance grading"""
+    relevance: str = Field(
+        description="'relevant' if the chunks contain enough information to answer the question, 'not_relevant' otherwise"
+    )
+    reasoning: str = Field(
+        description="Brief explanation of the grading decision"
+    )
+
 def grader_node(state: GraphState) -> GraphState:
-    print("⚖️ Grader: checking relevance of retrieved documents...")
-    # Tomorrow: real grading logic
-    return {**state, "relevance": "relevant"}
+    print("⚖️  Grader: scoring document relevance...")
+
+    question = state.get("rewritten_question") or state["question"]
+    documents = state["documents"]
+
+    if not documents:
+        print("⚖️  Grader decision: not_relevant — no documents retrieved")
+        return {**state, "relevance": "not_relevant"}
+
+    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+    structured_llm = llm.with_structured_output(GradeDecision)
+
+    formatted_docs = "\n\n".join(
+        f"[Chunk {i+1}]\n{doc.page_content}"
+        for i, doc in enumerate(documents)
+    )
+
+    prompt = ChatPromptTemplate.from_messages([
+        ("system",
+         "You are a strict relevance grader for an HR policy assistant.\n\n"
+         "Decide whether the retrieved chunks contain enough information to answer the question.\n\n"
+         "Grade as 'relevant' ONLY if the chunks directly address the question with specific details.\n"
+         "Grade as 'not_relevant' if:\n"
+         "- The chunks cover a different topic\n"
+         "- The chunks are too vague or generic\n"
+         "- Key details needed to answer are missing\n\n"
+         "Be strict. A partial match is not enough."),
+        ("human", "Question: {question}\n\nRetrieved chunks:\n{documents}")
+    ])
+
+    chain = prompt | structured_llm
+    result = chain.invoke({"question": question, "documents": formatted_docs})
+
+    print(f"⚖️  Grader decision: {result.relevance} — {result.reasoning}")
+
+    return {**state, "relevance": result.relevance}
 
 # ── RESPONSE NODE ────────────────────────────────────────
 def response_node(state: GraphState) -> GraphState:
