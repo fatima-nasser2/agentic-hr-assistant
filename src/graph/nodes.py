@@ -1,8 +1,10 @@
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser
 from pydantic import BaseModel, Field
 from src.graph.state import GraphState
+from src.rag_pipeline import load_vectorstore
 
 load_dotenv()
 
@@ -56,8 +58,46 @@ Be decisive. When in doubt, route to 'rag'."""),
 # ── RAG NODE ─────────────────────────────────────────────
 def rag_node(state: GraphState) -> GraphState:
     print("🔍 RAG Agent: retrieving relevant documents...")
-    # Tomorrow: real retrieval + query rewriting
-    return {**state, "documents": [], "generation": ""}
+
+    attempts = state.get("retrieval_attempts", 0)
+    question = state["question"]
+
+    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+
+    if attempts == 0:
+        rewrite_prompt = ChatPromptTemplate.from_messages([
+            ("system",
+             "You are an expert at rewriting HR policy questions to improve document retrieval.\n"
+             "Rewrite the question to be more specific, include relevant HR terminology, "
+             "expand abbreviations, and make the intent crystal clear.\n"
+             "Return ONLY the rewritten question, nothing else."),
+            ("human", "Original question: {question}")
+        ])
+    else:
+        rewrite_prompt = ChatPromptTemplate.from_messages([
+            ("system",
+             "You are an expert at rewriting HR policy questions to improve document retrieval.\n"
+             "This is a RETRY — the first search found no relevant documents.\n"
+             "Rewrite the question using DIFFERENT keywords: try synonyms, related terms, "
+             "and a broader scope to catch more relevant chunks.\n"
+             "Return ONLY the rewritten question, nothing else."),
+            ("human", "Original question: {question}")
+        ])
+
+    rewrite_chain = rewrite_prompt | llm | StrOutputParser()
+    rewritten_question = rewrite_chain.invoke({"question": question})
+
+    vectorstore = load_vectorstore()
+    retriever = vectorstore.as_retriever(search_kwargs={"k": 4})
+    documents = retriever.invoke(rewritten_question)
+
+    return {
+        **state,
+        "rewritten_question": rewritten_question,
+        "documents": documents,
+        "retrieval_attempts": attempts + 1,
+        "generation": "",
+    }
 
 # ── GRADER NODE ──────────────────────────────────────────
 def grader_node(state: GraphState) -> GraphState:
