@@ -30,11 +30,4 @@ def test_rag(question: str):
     print(f"{'='*55}")
 
 if __name__ == "__main__":
-    # Test 1 — HR question
-    test_rag("How many sick days do employees get?")
-
-    # Test 2 — HR question
-    test_rag("What is the parental leave policy?")
-
-    # Test 3 — Out of scope
-    test_rag("What is the capital of France?")
+    test_rag("What happens with my benefits during leave?")
