@@ -1,4 +1,5 @@
 from langgraph.graph import StateGraph, END
+from langgraph.checkpoint.memory import MemorySaver
 from src.graph.state import GraphState
 from src.graph.nodes import (
     router_node,
@@ -61,4 +62,5 @@ def build_graph():
     graph.add_edge("response", END)
     graph.add_edge("unknown", END)
 
-    return graph.compile()
+    memory = MemorySaver()
+    return graph.compile(checkpointer=memory)

@@ -27,9 +27,15 @@ def router_node(state: GraphState) -> GraphState:
     llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
     structured_llm = llm.with_structured_output(RouteDecision)
 
+    chat_history = state.get("chat_history", [])
+    history_text = "\n".join(
+        f"{msg['role'].upper()}: {msg['content']}"
+        for msg in chat_history[-4:]
+    )
+
     prompt = ChatPromptTemplate.from_messages([
         ("system", """You are a router for an HR policy assistant at NovaTech Inc.
-        
+
 Your job is to decide whether a question can be answered from HR policy documents or not.
 
 Route to 'rag' if the question is about:
@@ -46,12 +52,17 @@ Route to 'unknown' if the question is about:
 - Personal advice unrelated to work policies
 - Anything clearly outside the scope of HR policies
 
-Be decisive. When in doubt, route to 'rag'."""),
+Be decisive. When in doubt, route to 'rag'.
+
+Recent conversation:
+{chat_history}
+
+Use this history to interpret vague follow-up questions (e.g. "what about sick days?" after a leave question)."""),
         ("human", "Question: {question}")
     ])
 
     chain = prompt | structured_llm
-    result = chain.invoke({"question": state["question"]})
+    result = chain.invoke({"question": state["question"], "chat_history": history_text})
 
     print(f"🔀 Router decision: {result.route} — {result.reasoning}")
 
@@ -182,6 +193,12 @@ def response_node(state: GraphState) -> GraphState:
         for doc in documents
     )
 
+    chat_history = state.get("chat_history", [])
+    history_text = "\n".join(
+        f"{msg['role'].upper()}: {msg['content']}"
+        for msg in chat_history[-4:]
+    )
+
     llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
     structured_llm = llm.with_structured_output(ResponseOutput)
 
@@ -192,12 +209,14 @@ def response_node(state: GraphState) -> GraphState:
          "Do NOT use any outside knowledge.\n"
          "Be specific — include exact numbers, dates, or rules where available.\n"
          "If the excerpts do not contain a complete answer, say so clearly.\n\n"
-         "Also list the source document filenames you drew from."),
+         "Also list the source document filenames you drew from.\n\n"
+         "Recent conversation:\n{chat_history}\n\n"
+         "Use this history to give coherent follow-up answers (e.g. avoid repeating context already established)."),
         ("human", "Question: {question}\n\nPolicy excerpts:\n{documents}")
     ])
 
     chain = prompt | structured_llm
-    result = chain.invoke({"question": question, "documents": formatted_docs})
+    result = chain.invoke({"question": question, "documents": formatted_docs, "chat_history": history_text})
 
     sources_line = ", ".join(result.sources) if result.sources else "HR Policy Documents"
     generation = f"{result.answer}\n\nSources: {sources_line}"
@@ -209,4 +228,23 @@ def response_node(state: GraphState) -> GraphState:
 # ── UNKNOWN NODE ─────────────────────────────────────────
 def unknown_node(state: GraphState) -> GraphState:
     print("❓ Unknown: question outside HR policy scope...")
-    return {**state, "generation": "I don't have information about that in the HR policy documents."}
+
+    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.3)
+
+    prompt = ChatPromptTemplate.from_messages([
+        ("system",
+         "You are the NovaTech HR Assistant.\n\n"
+         "The user's message is not an HR policy question. Respond based on what it is:\n\n"
+         "- If it is a greeting or small talk (e.g. 'hello', 'hi', 'how are you'), "
+         "reply warmly, briefly introduce yourself, and invite them to ask an HR question.\n"
+         "- If it is off-topic (e.g. coding help, general knowledge, personal advice), "
+         "politely explain that you can only answer questions about NovaTech HR policies "
+         "(leave, remote work, compensation, hiring, code of conduct).\n\n"
+         "Keep your response short and friendly."),
+        ("human", "{question}")
+    ])
+
+    chain = prompt | llm | StrOutputParser()
+    response = chain.invoke({"question": state["question"]})
+
+    return {**state, "generation": response}

@@ -1,5 +1,6 @@
 import sys
 import os
+import uuid
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import streamlit as st
@@ -34,6 +35,10 @@ with col1:
 
     if "messages" not in st.session_state:
         st.session_state.messages = []
+    if "chat_history" not in st.session_state:
+        st.session_state.chat_history = []
+    if "thread_id" not in st.session_state:
+        st.session_state.thread_id = str(uuid.uuid4())
 
     for msg in st.session_state.messages:
         with st.chat_message(msg["role"]):
@@ -64,8 +69,11 @@ with col1:
             "generation": "",
             "retrieval_attempts": 0,
             "relevance": "",
-            "route": ""
+            "route": "",
+            "chat_history": st.session_state.chat_history
         }
+
+        config = {"configurable": {"thread_id": st.session_state.thread_id}}
 
         # ── RIGHT COLUMN: stream agent trace ─────────────
         with col2:
@@ -73,7 +81,7 @@ with col1:
                 graph = get_graph()
                 final_state = {}
 
-                for event in graph.stream(initial_state):
+                for event in graph.stream(initial_state, config=config):
                     for node_name, node_output in event.items():
                         final_state.update(node_output)
 
@@ -111,6 +119,8 @@ with col1:
             with st.chat_message("assistant"):
                 st.markdown(final_answer)
             st.session_state.messages.append({"role": "assistant", "content": final_answer})
+            st.session_state.chat_history.append({"role": "user", "content": question})
+            st.session_state.chat_history.append({"role": "assistant", "content": final_answer})
 
 # ── SIDEBAR ──────────────────────────────────────────────
 with st.sidebar:
@@ -136,4 +146,6 @@ with st.sidebar:
     st.divider()
     if st.button("🗑️ Clear Chat"):
         st.session_state.messages = []
+        st.session_state.chat_history = []
+        st.session_state.thread_id = str(uuid.uuid4())
         st.rerun()
