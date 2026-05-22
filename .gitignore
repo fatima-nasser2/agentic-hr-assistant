@@ -219,7 +219,7 @@ __marimo__/
 
 
 data/raw/*
-# data/processed/*
+data/processed/*
 
 .env
 
