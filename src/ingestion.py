@@ -5,7 +5,8 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_openai import OpenAIEmbeddings
 from langchain_community.vectorstores import FAISS
 
-load_dotenv()
+load_dotenv()  # works locally
+# On HF Spaces, OPENAI_API_KEY is set as environment variable automatically
 
 # ── 1. LOAD ──────────────────────────────────────────────
 def load_documents(raw_data_path: str):

@@ -8,7 +8,8 @@ from pydantic import BaseModel, Field
 from src.graph.state import GraphState
 from src.rag_pipeline import load_vectorstore
 
-load_dotenv()
+load_dotenv()  # works locally
+# On HF Spaces, OPENAI_API_KEY is set as environment variable automatically
 
 # ── ROUTER NODE ──────────────────────────────────────────
 
