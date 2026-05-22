@@ -12,6 +12,8 @@ pinned: false
 
 # NovaTech HR Assistant
 
+[![Live Demo](https://img.shields.io/badge/🤗%20Hugging%20Face-Live%20Demo-blue)](https://huggingface.co/spaces/fatiman123/agentic-hr-assistant)
+
 An intelligent, agentic HR policy chatbot built with **LangGraph** and **Streamlit**. It answers employee questions about company policies using Retrieval-Augmented Generation (RAG), with automatic query routing, multi-attempt retrieval, relevance grading, and source-cited responses — all powered by OpenAI GPT-4o mini.
 
 ---
