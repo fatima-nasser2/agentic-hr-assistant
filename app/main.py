@@ -104,8 +104,7 @@ with col1:
                             rewritten = node_output.get("rewritten_question", "")
                             docs = node_output.get("documents", [])
                             with st.status(f"🔍 RAG Agent — attempt #{attempts}", state="complete"):
-                                with st.expander("View rewritten query"):
-                                    st.write(rewritten)
+                                st.write(f"**Rewritten query:** {rewritten}")
                                 st.write(f"**Chunks retrieved:** {len(docs)}")
 
                         elif node_name == "grader":
