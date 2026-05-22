@@ -1,3 +1,15 @@
+---
+title: NovaTech HR Assistant
+emoji: 🤖
+colorFrom: blue
+colorTo: indigo
+sdk: streamlit
+sdk_version: "1.41.0"
+python_version: "3.10"
+app_file: app/main.py
+pinned: false
+---
+
 # NovaTech HR Assistant
 
 An intelligent, agentic HR policy chatbot built with **LangGraph** and **Streamlit**. It answers employee questions about company policies using Retrieval-Augmented Generation (RAG), with automatic query routing, multi-attempt retrieval, relevance grading, and source-cited responses — all powered by OpenAI GPT-4o mini.
