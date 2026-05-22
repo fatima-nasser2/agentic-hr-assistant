@@ -7,6 +7,13 @@ import streamlit as st
 from src.graph.graph import build_graph
 from src.ingestion import load_documents, chunk_documents, embed_and_store
 
+# ── PAGE CONFIG ──────────────────────────────────────────
+st.set_page_config(
+    page_title="NovaTech HR Assistant",
+    page_icon="🤖",
+    layout="wide"
+)
+
 # Auto-build FAISS index if it doesn't exist
 FAISS_PATH = "data/processed/faiss_index"
 if not os.path.exists(FAISS_PATH):
@@ -14,13 +21,6 @@ if not os.path.exists(FAISS_PATH):
         docs = load_documents("data/raw")
         chunks = chunk_documents(docs)
         embed_and_store(chunks, FAISS_PATH)
-
-# ── PAGE CONFIG ──────────────────────────────────────────
-st.set_page_config(
-    page_title="NovaTech HR Assistant",
-    page_icon="🤖",
-    layout="wide"
-)
 
 # ── CACHE GRAPH (build once per session) ─────────────────
 @st.cache_resource
