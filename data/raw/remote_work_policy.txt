@@ -1,0 +1,44 @@
+NovaTech Inc. — Remote Work PolicyDocument Version: 1.4
+Effective Date: January 1, 2024
+Last Reviewed: March 15, 2024
+Owner: People Operations Team1. PurposeThis policy establishes guidelines for remote work arrangements at NovaTech Inc. NovaTech embraces flexible work as a core part of its culture, trusting employees to deliver results regardless of their physical location.2. ScopeThis policy applies to all full-time and part-time employees. Contractors may work remotely by default unless their contract specifies otherwise.3. Eligibility
+All employees who have completed their 90-day probation period are eligible for remote work
+Employees must have a satisfactory performance rating in their most recent review
+Roles requiring physical presence (lab work, hardware, on-site client work) are exempt and will be communicated clearly at the time of hiring
+4. Work Arrangements4.1 Hybrid Work
+
+The default arrangement at NovaTech is hybrid — a minimum of 2 days per week in the office
+Office days are coordinated at the team level and communicated by the direct manager at the start of each month
+Employees may request to change their designated office days with 5 working days notice
+4.2 Fully Remote Work
+
+Employees may apply for a fully remote arrangement after 6 months of employment
+Requests must be submitted to People Operations and require approval from the department head
+Fully remote employees must be available for quarterly in-person team gatherings, travel costs covered by NovaTech
+Fully remote arrangements are reviewed every 6 months
+4.3 Temporary Remote Work
+
+Employees may work fully remotely for up to 4 consecutive weeks without formal approval, subject to manager awareness
+Temporary remote work exceeding 4 weeks requires written approval from People Operations
+5. Equipment and Internet
+NovaTech provides each remote employee with a standard equipment package: laptop, monitor, keyboard, and mouse
+Employees receive a home office stipend of $500 upon starting remote work, for furniture or accessories
+Employees are responsible for maintaining a stable internet connection with a minimum speed of 20 Mbps
+NovaTech provides a monthly internet subsidy of $30 for fully remote employees
+Equipment remains the property of NovaTech and must be returned upon termination of employment
+6. Availability and Communication
+Remote employees must be available during core hours: 10:00 AM – 4:00 PM in their local time zone
+Employees must respond to messages within 2 hours during core hours
+All remote employees must have their camera on during team meetings unless technically not possible
+Status must be updated on the company communication platform (Slack) at the start and end of each working day
+7. Security and Confidentiality
+Employees must use the NovaTech VPN at all times when accessing company systems remotely
+Work must not be conducted on public or unsecured Wi-Fi without VPN
+Employees must ensure their workspace is private during calls involving confidential information
+Any security incidents must be reported to the IT team immediately at security@novatech.com
+8. Performance and Accountability
+Remote employees are evaluated on outcomes and deliverables, not hours logged
+Managers conduct bi-weekly check-ins with remote team members
+Consistent underperformance in a remote arrangement may result in a return-to-office requirement
+9. Policy ReviewThis policy is reviewed annually. Employees will be notified of changes via company email.For questions contact: people@novatech.com
+People Operations Team — NovaTech Inc.

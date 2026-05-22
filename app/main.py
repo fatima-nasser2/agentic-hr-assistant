@@ -5,6 +5,15 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import streamlit as st
 from src.graph.graph import build_graph
+from src.ingestion import load_documents, chunk_documents, embed_and_store
+
+# Auto-build FAISS index if it doesn't exist
+FAISS_PATH = "data/processed/faiss_index"
+if not os.path.exists(FAISS_PATH):
+    with st.spinner("Building knowledge base for first time... (this takes ~30 seconds)"):
+        docs = load_documents("data/raw")
+        chunks = chunk_documents(docs)
+        embed_and_store(chunks, FAISS_PATH)
 
 # ── PAGE CONFIG ──────────────────────────────────────────
 st.set_page_config(
