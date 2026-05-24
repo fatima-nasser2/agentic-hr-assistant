@@ -3,6 +3,7 @@ from langgraph.checkpoint.memory import MemorySaver
 from src.graph.state import GraphState
 from src.graph.nodes import (
     router_node,
+    source_router_node,
     rag_node,
     grader_node,
     response_node,
@@ -15,6 +16,10 @@ def route_question(state: GraphState) -> str:
     if state["route"] == "rag":
         return "rag"
     return "unknown"
+
+def route_source(state: GraphState) -> str:
+    """After source router — decide which retrieval node to use"""
+    return state["retrieval_source"]  # "faiss" / "sql" / "web"
 
 def check_relevance(state: GraphState) -> str:
     """After grader node — decide whether to respond or retry"""
@@ -30,6 +35,7 @@ def build_graph():
 
     # Add nodes
     graph.add_node("router", router_node)
+    graph.add_node("source_router", source_router_node)
     graph.add_node("rag", rag_node)
     graph.add_node("grader", grader_node)
     graph.add_node("response", response_node)
@@ -43,8 +49,19 @@ def build_graph():
         "router",
         route_question,
         {
-            "rag": "rag",
+            "rag": "source_router",
             "unknown": "unknown"
+        }
+    )
+    
+    # Source router → correct retrieval node
+    graph.add_conditional_edges(
+        "source_router",
+        route_source,
+        {
+            "faiss": "rag",
+            "sql": "rag",
+            "web": "rag"
         }
     )
 

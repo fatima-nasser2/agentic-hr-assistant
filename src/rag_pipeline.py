@@ -1,4 +1,5 @@
 import os
+from functools import lru_cache
 from dotenv import load_dotenv
 from langchain_openai import OpenAIEmbeddings, ChatOpenAI
 from langchain_community.vectorstores import FAISS
@@ -8,10 +9,13 @@ from langchain_core.runnables import RunnablePassthrough
 
 load_dotenv()
 
-FAISS_INDEX_PATH = "data/processed/faiss_index"
+FAISS_INDEX_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "processed", "faiss_index")
 
 # ── 1. LOAD VECTOR STORE ─────────────────────────────────
-def load_vectorstore(index_path: str = FAISS_INDEX_PATH):
+@lru_cache(maxsize=1)
+def load_vectorstore(index_path: str = None):
+    if index_path is None:
+        index_path = FAISS_INDEX_PATH
     embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
     vectorstore = FAISS.load_local(
         index_path,

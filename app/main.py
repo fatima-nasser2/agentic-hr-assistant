@@ -15,10 +15,11 @@ st.set_page_config(
 )
 
 # Auto-build FAISS index if it doesn't exist
-FAISS_PATH = "data/processed/faiss_index"
+_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+FAISS_PATH = os.path.join(_ROOT, "data", "processed", "faiss_index")
 if not os.path.exists(FAISS_PATH):
     with st.spinner("Building knowledge base for first time... (this takes ~30 seconds)"):
-        docs = load_documents("data/raw")
+        docs = load_documents(os.path.join(_ROOT, "data", "raw"))
         chunks = chunk_documents(docs)
         embed_and_store(chunks, FAISS_PATH)
 
@@ -79,6 +80,7 @@ with col1:
             "retrieval_attempts": 0,
             "relevance": "",
             "route": "",
+            "retrieval_source": "",
             "chat_history": st.session_state.chat_history
         }
 
@@ -98,6 +100,11 @@ with col1:
                             route = node_output.get("route", "unknown")
                             with st.status(f"🔀 Router Agent — routed to: `{route}`", state="complete"):
                                 st.write(f"**Decision:** `{route}`")
+
+                        elif node_name == "source_router":
+                            source = node_output.get("retrieval_source", "")
+                            with st.status(f"🗄️ Source Router — using: `{source}`", state="complete"):
+                                st.write(f"**Source:** `{source}`")
 
                         elif node_name == "rag":
                             attempts = node_output.get("retrieval_attempts", 1)

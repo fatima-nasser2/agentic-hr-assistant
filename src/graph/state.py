@@ -9,4 +9,5 @@ class GraphState(TypedDict):
     retrieval_attempts: int            # Track retries
     relevance: str                     # "relevant" or "not_relevant"
     route: str                         # "rag" or "unknown"
+    retrieval_source: str              # "faiss" / "sql" / "web"
     chat_history: List[dict]           # Session conversation history

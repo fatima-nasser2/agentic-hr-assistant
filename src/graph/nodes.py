@@ -37,23 +37,27 @@ def router_node(state: GraphState) -> GraphState:
     prompt = ChatPromptTemplate.from_messages([
         ("system", """You are a router for an HR policy assistant at NovaTech Inc.
 
-Your job is to decide whether a question can be answered from HR policy documents or not.
+Your job is to decide whether a question is work-related or completely off-topic.
 
-Route to 'rag' if the question is about:
+Route to 'rag' if the question is about ANY of these:
 - Leave and time off (sick days, annual leave, parental leave, etc.)
 - Remote work and office policies
 - Hiring and onboarding
 - Compensation, salary, and benefits
 - Code of conduct and workplace behavior
 - Learning and development
-- Any other HR or company policy topic
+- Personal employee data (leave balance, salary, review dates)
+- External HR topics, labor laws, or industry benchmarks
+- Any work or employment related topic
 
-Route to 'unknown' if the question is about:
-- Technical or engineering topics
-- Personal advice unrelated to work policies
-- Anything clearly outside the scope of HR policies
+Route to 'unknown' ONLY if the question is completely unrelated to work:
+- General knowledge questions (capitals, math, science)
+- Personal advice unrelated to work
+- Technical coding help
+- Casual conversation with no work context
 
-Be decisive. When in doubt, route to 'rag'.
+Be inclusive. When in doubt, route to 'rag'.
+The Source Router will handle deciding exactly which data source to use.
 
 Recent conversation:
 {chat_history}
@@ -68,6 +72,74 @@ Use this history to interpret vague follow-up questions (e.g. "what about sick d
     print(f"🔀 Router decision: {result.route} — {result.reasoning}")
 
     return {**state, "route": result.route}
+
+# ── SOURCE ROUTER NODE ───────────────────────────────────
+
+class SourceDecision(BaseModel):
+    """Structured output for source routing decision"""
+    source: str = Field(
+        description="Source to use: 'faiss' for HR policies, 'sql' for personal employee data, 'web' for external information"
+    )
+    reasoning: str = Field(
+        description="Brief explanation of why this source was chosen"
+    )
+
+def source_router_node(state: GraphState) -> GraphState:
+    print("🗄️ Source Router: deciding retrieval source...")
+
+    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+    structured_llm = llm.with_structured_output(SourceDecision)
+
+    prompt = ChatPromptTemplate.from_messages([
+        ("system", """You are a retrieval source router for NovaTech's HR Assistant.
+
+Your job is to decide which data source to query based on the question.
+
+Available sources:
+
+1. 'faiss' — Vector store containing HR policy documents
+   Use when the question is about:
+   - Company policies (leave, remote work, hiring, compensation structure, code of conduct)
+   - Rules, entitlements, and procedures that apply to ALL employees
+   - How things work at NovaTech in general
+   Examples:
+   - "What is the sick leave policy?"
+   - "How does the hiring process work?"
+   - "What are the remote work rules?"
+
+2. 'sql' — Relational database containing specific employee records
+   Use when the question is about:
+   - Personal data specific to an individual employee
+   - Current balances, salaries, dates, and numbers tied to a specific person
+   - Information that varies per employee
+   Examples:
+   - "How many sick days do I have left?"
+   - "What is my current salary?"
+   - "When is my next performance review?"
+   - "How many annual leave days do I have remaining?"
+
+3. 'web' — Live web search for external information
+   Use when the question is about:
+   - Current events or recent news
+   - Information that is not in HR policies or employee records
+   - Industry trends, legal changes, or external benchmarks
+   Examples:
+   - "What are the latest labor laws in Lebanon?"
+   - "What is the average salary for an AI Engineer in 2026?"
+   - "What are HR trends this year?"
+
+Be decisive. When in doubt between faiss and sql:
+- If the answer is the SAME for every employee → faiss
+- If the answer DIFFERS per employee → sql"""),
+        ("human", "Question: {question}")
+    ])
+
+    chain = prompt | structured_llm
+    result = chain.invoke({"question": state["question"]})
+
+    print(f"🗄️ Source decision: {result.source} — {result.reasoning}")
+
+    return {**state, "retrieval_source": result.source}
 
 # ── RAG NODE ─────────────────────────────────────────────
 def rag_node(state: GraphState) -> GraphState:
