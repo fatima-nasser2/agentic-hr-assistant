@@ -227,3 +227,6 @@ data/hr_database.db
 hr-assistant/
 
 outputs/
+
+# Feedback data
+data/feedback.json
