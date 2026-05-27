@@ -5,6 +5,7 @@ from src.graph.nodes import (
     router_node,
     source_router_node,
     rag_node,
+    sql_node,
     grader_node,
     response_node,
     unknown_node
@@ -20,6 +21,12 @@ def route_question(state: GraphState) -> str:
 def route_source(state: GraphState) -> str:
     """After source router — decide which retrieval node to use"""
     return state["retrieval_source"]  # "faiss" / "sql" / "web"
+
+def route_sql(state: GraphState) -> str:
+    """After sql node — skip grader if we're just asking for the employee ID"""
+    if state.get("generation"):
+        return "end"
+    return "grader"
 
 def check_relevance(state: GraphState) -> str:
     """After grader node — decide whether to respond or retry"""
@@ -37,6 +44,7 @@ def build_graph():
     graph.add_node("router", router_node)
     graph.add_node("source_router", source_router_node)
     graph.add_node("rag", rag_node)
+    graph.add_node("sql", sql_node)
     graph.add_node("grader", grader_node)
     graph.add_node("response", response_node)
     graph.add_node("unknown", unknown_node)
@@ -60,12 +68,20 @@ def build_graph():
         route_source,
         {
             "faiss": "rag",
-            "sql": "rag",
+            "sql": "sql",
             "web": "rag"
         }
     )
 
     graph.add_edge("rag", "grader")
+    graph.add_conditional_edges(
+        "sql",
+        route_sql,
+        {
+            "end": END,
+            "grader": "grader"
+        }
+    )
 
     graph.add_conditional_edges(
         "grader",

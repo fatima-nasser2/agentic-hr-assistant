@@ -7,6 +7,7 @@ from langchain_core.output_parsers import StrOutputParser
 from pydantic import BaseModel, Field
 from src.graph.state import GraphState
 from src.rag_pipeline import load_vectorstore
+from src.database.query_engine import query_to_documents
 
 load_dotenv()  # works locally
 # On HF Spaces, OPENAI_API_KEY is set as environment variable automatically
@@ -141,6 +142,33 @@ Be decisive. When in doubt between faiss and sql:
 
     return {**state, "retrieval_source": result.source}
 
+# ── SQL NODE ─────────────────────────────────────────────
+
+def sql_node(state: GraphState) -> GraphState:
+    print("🗃️ SQL Node: querying employee database...")
+
+    employee_id = state.get("employee_id", "").strip()
+
+    # If no employee ID provided, ask for it
+    if not employee_id:
+        print("🗃️ SQL Node: no employee ID found — requesting it")
+        return {
+            **state,
+            "documents": [],
+            "generation": "To look up your personal data, I need your employee ID. Please provide it in the format EMP001, EMP042, etc.",
+        }
+
+    # Query the database
+    documents = query_to_documents(employee_id, state["question"])
+    print(f"🗃️ SQL Node: retrieved data for employee {employee_id}")
+
+    return {
+        **state,
+        "documents": documents,
+        "rewritten_question": state["question"],
+        "retrieval_attempts": state.get("retrieval_attempts", 0) + 1
+    }
+
 # ── RAG NODE ─────────────────────────────────────────────
 def rag_node(state: GraphState) -> GraphState:
     print("🔍 RAG Agent: retrieving relevant documents...")
@@ -249,6 +277,9 @@ def response_node(state: GraphState) -> GraphState:
     print("💬 Response Agent: generating final answer...")
 
     if state.get("relevance") == "not_relevant":
+        if state.get("generation"):
+            print("💬 Response Agent: using upstream generation (e.g. SQL no-ID message)")
+            return state
         print("💬 Response Agent: no relevant docs found — returning fallback")
         return {
             **state,

@@ -1,4 +1,4 @@
-from typing import TypedDict, List, Optional
+from typing import TypedDict, List
 from langchain_core.documents import Document
 
 class GraphState(TypedDict):
@@ -11,3 +11,4 @@ class GraphState(TypedDict):
     route: str                         # "rag" or "unknown"
     retrieval_source: str              # "faiss" / "sql" / "web"
     chat_history: List[dict]           # Session conversation history
+    employee_id: str
