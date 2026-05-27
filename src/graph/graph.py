@@ -69,6 +69,7 @@ def build_graph():
         {
             "faiss": "rag",
             "sql": "sql",
+            "internal_kb": "rag",
             "web": "rag"
         }
     )

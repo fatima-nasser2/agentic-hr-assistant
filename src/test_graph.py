@@ -57,19 +57,28 @@ def run_test(graph, question: str, employee_id: str = ""):
 # ── TEST CASES ────────────────────────────────────────────
 
 TESTS = {
-    "FAISS - SOURCE ROUTING": [
-        "What is the sick leave policy?",
-        "How does the hiring process work?",
+    # "FAISS - SOURCE ROUTING": [
+    #     "What is the sick leave policy?",
+    #     "How does the hiring process work?",
+    # ],
+    # "SQL - SOURCE ROUTING": [
+    #     ("How many sick days do I have left?", "EMP000"),
+    #     ("When is my next performance review?", "EMP000"),
+    #     ("How many sick days do I have left?", ""),   # no ID — should ask for it
+    # ],
+    "Internal KB - SOURCE ROUTING": [
+        "Who is the CTO of NovaTech?",
+        "Who is on the engineering team?",
+        "What tools does NovaTech use for project management?",
+        "What happens in my first 30 days?",
+        "How do I request new software?",
+        "What should I do on my first day?",
+        "How do I set up my laptop?",
     ],
-    "SQL - SOURCE ROUTING": [
-        ("How many sick days do I have left?", "EMP000"),
-        ("When is my next performance review?", "EMP000"),
-        ("How many sick days do I have left?", ""),   # no ID — should ask for it
-    ],
-    "Web - SOURCE ROUTING": [
-        "What are the latest labor laws in Lebanon?",
-        "What is the average salary for an AI Engineer in 2026?",
-    ],
+    # "Web - SOURCE ROUTING": [
+    #     "What are the latest labor laws in Lebanon?",
+    #     "What is the average salary for an AI Engineer in 2026?",
+    # ],
 }
 
 # ── RUNNER ────────────────────────────────────────────────

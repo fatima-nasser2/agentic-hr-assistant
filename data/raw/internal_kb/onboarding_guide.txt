@@ -1,0 +1,97 @@
+NovaTech Inc. — New Employee Onboarding Guide
+
+Welcome to NovaTech! This guide will help you get set up and productive
+in your first 30 days.
+
+Last Updated: January 2024
+Maintained by: People Operations
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+BEFORE YOUR FIRST DAY
+
+1. Check your NovaTech email — your IT setup instructions will be sent there
+2. Complete your employment paperwork via the HR portal: hr.novatech.com
+3. Review the Employee Handbook sent to your personal email
+4. Download Slack and join with your NovaTech email
+5. Your manager will reach out to schedule your Day 1 welcome call
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+WEEK 1 — ORIENTATION
+
+Day 1:
+- Welcome call with your manager (9:00 AM)
+- IT setup session with the IT team (11:00 AM)
+- Team lunch (in-office or virtual)
+- Complete mandatory compliance training in the HR portal
+
+Day 2-5:
+- Meet your team members (your manager will schedule these)
+- Complete role-specific onboarding tasks shared by your manager
+- Set up all required tools (see IT Guidelines)
+- Review company values, mission, and strategy documents
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+YOUR 30-60-90 DAY PLAN
+
+First 30 Days — Learn:
+- Understand the product and business
+- Meet all direct team members and key stakeholders
+- Complete all mandatory training
+- Shadow colleagues and attend all team ceremonies
+
+First 60 Days — Contribute:
+- Take ownership of your first project or task
+- Begin contributing to team goals
+- Share your observations and ideas with your manager
+- Complete your 60-day check-in with People Operations
+
+First 90 Days — Drive:
+- Operate independently in your role
+- Set your OKRs for the next quarter
+- Complete your 90-day review with your manager
+- Identify areas for growth and development
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+IMPORTANT CONTACTS
+
+Your Manager: listed in your offer letter
+HR Business Partner: listed in your welcome email
+IT Support: it-support@novatech.com | Slack: #it-help
+People Operations: people@novatech.com
+Office Manager: office@novatech.com
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+KEY TOOLS & SYSTEMS
+
+Communication: Slack (primary), Email (formal)
+Project Management: Notion + Jira
+Code Repository: GitHub (engineering only)
+HR Portal: hr.novatech.com
+Finance & Expenses: Expensify
+Video Calls: Google Meet
+Document Storage: Google Drive
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+FREQUENTLY ASKED QUESTIONS
+
+Q: When do I get my company laptop?
+A: Your laptop will be couriered to your home address before Day 1,
+   or available for pickup at the office on your first day.
+
+Q: How do I submit expenses?
+A: Use Expensify. All expenses must be submitted within 30 days.
+   Expenses over $100 require manager approval before submission.
+
+Q: Where do I find my payslips?
+A: All payslips are available in the HR portal at hr.novatech.com
+   under My Documents > Payslips.
+
+Q: Who do I contact if I have an HR question?
+A: Contact your HR Business Partner or email people@novatech.com.
+   For urgent matters, use the HR portal's live chat feature.

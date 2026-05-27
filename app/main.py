@@ -5,7 +5,11 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import streamlit as st
 from src.graph.graph import build_graph
-from src.ingestion import load_documents, chunk_documents, embed_and_store
+from src.ingestion import (
+    load_documents, chunk_documents, embed_and_store,
+    HR_POLICIES_RAW, INTERNAL_KB_RAW,
+    HR_POLICIES_INDEX, INTERNAL_KB_INDEX,
+)
 
 # ── PAGE CONFIG ──────────────────────────────────────────
 st.set_page_config(
@@ -14,14 +18,19 @@ st.set_page_config(
     layout="wide"
 )
 
-# Auto-build FAISS index if it doesn't exist
-_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-FAISS_PATH = os.path.join(_ROOT, "data", "processed", "faiss_index")
-if not os.path.exists(FAISS_PATH):
-    with st.spinner("Building knowledge base for first time... (this takes ~30 seconds)"):
-        docs = load_documents(os.path.join(_ROOT, "data", "raw"))
-        chunks = chunk_documents(docs)
-        embed_and_store(chunks, FAISS_PATH)
+# Auto-build FAISS indexes if they don't exist
+_INDEXES = [
+    ("HR Policies",  HR_POLICIES_RAW, HR_POLICIES_INDEX),
+    ("Internal KB",  INTERNAL_KB_RAW, INTERNAL_KB_INDEX),
+]
+_missing = [(label, raw, idx) for label, raw, idx in _INDEXES if not os.path.exists(idx)]
+if _missing:
+    labels = " & ".join(l for l, _, _ in _missing)
+    with st.spinner(f"Building knowledge base ({labels})... this takes ~30 seconds"):
+        for _, raw_path, index_path in _missing:
+            docs = load_documents(raw_path)
+            chunks = chunk_documents(docs)
+            embed_and_store(chunks, index_path)
 
 # ── CACHE GRAPH (build once per session) ─────────────────
 @st.cache_resource

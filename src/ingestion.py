@@ -8,6 +8,13 @@ from langchain_community.vectorstores import FAISS
 load_dotenv()  # works locally
 # On HF Spaces, OPENAI_API_KEY is set as environment variable automatically
 
+_ROOT = os.path.join(os.path.dirname(__file__), "..")
+
+HR_POLICIES_RAW       = os.path.join(_ROOT, "data", "raw", "hr_policies")
+INTERNAL_KB_RAW       = os.path.join(_ROOT, "data", "raw", "internal_kb")
+HR_POLICIES_INDEX     = os.path.join(_ROOT, "data", "processed", "faiss_hr_policies")
+INTERNAL_KB_INDEX     = os.path.join(_ROOT, "data", "processed", "faiss_internal_kb")
+
 # ── 1. LOAD ──────────────────────────────────────────────
 def load_documents(raw_data_path: str):
     loader = DirectoryLoader(
@@ -17,7 +24,7 @@ def load_documents(raw_data_path: str):
         loader_kwargs={"encoding": "utf-8"}
     )
     documents = loader.load()
-    print(f"✅ Loaded {len(documents)} documents")
+    print(f"✅ Loaded {len(documents)} documents from {os.path.basename(raw_data_path)}")
     return documents
 
 # ── 2. CHUNK ─────────────────────────────────────────────
@@ -40,16 +47,18 @@ def embed_and_store(chunks, persist_directory: str):
     )
     os.makedirs(persist_directory, exist_ok=True)
     vectorstore.save_local(persist_directory)
-    print(f"✅ Embeddings stored in {persist_directory}")
+    print(f"✅ Index saved to {persist_directory}")
     return vectorstore
 
 # ── 4. RUN ───────────────────────────────────────────────
 if __name__ == "__main__":
-    raw_data_path = "data/raw"
-    persist_directory = "data/processed/faiss_index"
+    for label, raw_path, index_path in [
+        ("HR Policies",  HR_POLICIES_RAW, HR_POLICIES_INDEX),
+        ("Internal KB",  INTERNAL_KB_RAW, INTERNAL_KB_INDEX),
+    ]:
+        print(f"\n── Building {label} index ──────────────────────")
+        docs   = load_documents(raw_path)
+        chunks = chunk_documents(docs)
+        embed_and_store(chunks, index_path)
 
-    documents = load_documents(raw_data_path)
-    chunks = chunk_documents(documents)
-    vectorstore = embed_and_store(chunks, persist_directory)
-
-    print("\n🎉 Ingestion complete! Vector store is ready.")
+    print("\n🎉 Both indexes built and ready.")

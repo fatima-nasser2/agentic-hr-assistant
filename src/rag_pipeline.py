@@ -6,16 +6,15 @@ from langchain_community.vectorstores import FAISS
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
+from src.ingestion import HR_POLICIES_INDEX, INTERNAL_KB_INDEX
 
 load_dotenv()
 
-FAISS_INDEX_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "processed", "faiss_index")
-
 # ── 1. LOAD VECTOR STORE ─────────────────────────────────
-@lru_cache(maxsize=1)
+@lru_cache(maxsize=None)
 def load_vectorstore(index_path: str = None):
     if index_path is None:
-        index_path = FAISS_INDEX_PATH
+        index_path = HR_POLICIES_INDEX
     embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
     vectorstore = FAISS.load_local(
         index_path,

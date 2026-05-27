@@ -7,6 +7,7 @@ from langchain_core.output_parsers import StrOutputParser
 from pydantic import BaseModel, Field
 from src.graph.state import GraphState
 from src.rag_pipeline import load_vectorstore
+from src.ingestion import HR_POLICIES_INDEX, INTERNAL_KB_INDEX
 from src.database.query_engine import query_to_documents
 
 load_dotenv()  # works locally
@@ -49,12 +50,14 @@ Route to 'rag' if the question is about ANY of these:
 - Learning and development
 - Personal employee data (leave balance, salary, review dates)
 - External HR topics, labor laws, or industry benchmarks
+- Internal company information: team structure, org chart, leadership, tools, systems
+- Onboarding, first-day guides, IT setup, software requests
 - Any work or employment related topic
 
 Route to 'unknown' ONLY if the question is completely unrelated to work:
 - General knowledge questions (capitals, math, science)
 - Personal advice unrelated to work
-- Technical coding help
+- Technical coding help unrelated to NovaTech systems
 - Casual conversation with no work context
 
 Be inclusive. When in doubt, route to 'rag'.
@@ -79,7 +82,7 @@ Use this history to interpret vague follow-up questions (e.g. "what about sick d
 class SourceDecision(BaseModel):
     """Structured output for source routing decision"""
     source: str = Field(
-        description="Source to use: 'faiss' for HR policies, 'sql' for personal employee data, 'web' for external information"
+        description="Source to use: 'faiss' for HR policies, 'sql' for personal employee data, 'internal_kb' for internal company knowledge, 'web' for external information"
     )
     reasoning: str = Field(
         description="Brief explanation of why this source was chosen"
@@ -119,19 +122,34 @@ Available sources:
    - "When is my next performance review?"
    - "How many annual leave days do I have remaining?"
 
-3. 'web' — Live web search for external information
+3. 'internal_kb' — Internal company knowledge base
+   Use when the question is about:
+   - Company announcements and internal news
+   - Team structure and org chart
+   - Onboarding guides and new employee information
+   - IT guidelines, tools, and internal systems
+   Examples:
+   - "Who is on the engineering team?"
+   - "What tools does NovaTech use?"
+   - "What should I do on my first day?"
+   - "How do I set up my laptop?"
+   - "What was announced at the last all-hands?"
+
+4. 'web' — Live web search for external information
    Use when the question is about:
    - Current events or recent news
-   - Information that is not in HR policies or employee records
+   - Information that is not in HR policies, employee records, or internal docs
    - Industry trends, legal changes, or external benchmarks
    Examples:
    - "What are the latest labor laws in Lebanon?"
    - "What is the average salary for an AI Engineer in 2026?"
    - "What are HR trends this year?"
 
-Be decisive. When in doubt between faiss and sql:
-- If the answer is the SAME for every employee → faiss
-- If the answer DIFFERS per employee → sql"""),
+Be decisive. When in doubt:
+- Same for every employee and in policy docs → faiss
+- Differs per employee → sql
+- Internal company info, teams, tools, onboarding → internal_kb
+- External / real-world information → web"""),
         ("human", "Question: {question}")
     ])
 
@@ -201,7 +219,8 @@ def rag_node(state: GraphState) -> GraphState:
     rewrite_chain = rewrite_prompt | llm | StrOutputParser()
     rewritten_question = rewrite_chain.invoke({"question": question})
 
-    vectorstore = load_vectorstore()
+    index_path = INTERNAL_KB_INDEX if state.get("retrieval_source") == "internal_kb" else HR_POLICIES_INDEX
+    vectorstore = load_vectorstore(index_path)
     retriever = vectorstore.as_retriever(search_kwargs={"k": 4})
     documents = retriever.invoke(rewritten_question)
 

@@ -1,0 +1,90 @@
+NovaTech Inc. — Team Structure & Organization
+
+Last Updated: January 2024
+Maintained by: People Operations
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+EXECUTIVE LEADERSHIP TEAM
+
+CEO: Michael Torres
+COO: Priya Sharma
+CTO: Sarah Chen (appointed March 2024)
+CFO: David Kim
+VP People Operations: Amira Hassan
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ENGINEERING DEPARTMENT
+
+Engineering Manager: James Liu
+Total Headcount: 45 engineers
+
+Sub-teams:
+1. Platform Engineering (8 engineers)
+   - Owns core infrastructure, CI/CD, and developer tooling
+   - Lead: Ana Petrova
+
+2. AI & Machine Learning (12 engineers)
+   - Owns NovaTech AI Suite, LLM integrations, and data pipelines
+   - Lead: Omar Khalil
+   - Includes: AI Engineers, ML Engineers, Data Scientists
+
+3. Backend Engineering (15 engineers)
+   - Owns APIs, microservices, and database architecture
+   - Lead: Carlos Mendez
+
+4. Frontend Engineering (10 engineers)
+   - Owns web and mobile applications
+   - Lead: Yuki Tanaka
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PRODUCT DEPARTMENT
+
+VP Product: Rachel Greene
+Total Headcount: 18
+
+Sub-teams:
+1. Core Product (8 PMs)
+2. Growth & Analytics (5 PMs)
+3. Design (5 Designers)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PEOPLE OPERATIONS DEPARTMENT
+
+Head of People: Amira Hassan
+Total Headcount: 8
+
+Responsibilities:
+- Talent acquisition and onboarding
+- Employee relations and HR policies
+- Learning and development programs
+- Compensation and benefits administration
+- Culture and engagement initiatives
+
+HR Business Partners by department:
+- Engineering & Product: Lena Kovacs
+- Sales & Marketing: Marco Rossi
+- Finance & Legal: Nina Johansson
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+SALES DEPARTMENT
+
+Head of Sales: Brandon Lee
+Total Headcount: 22
+
+Regions:
+- EMEA (8 AEs)
+- North America (9 AEs)
+- MENA (5 AEs — new team 2024)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+FINANCE & LEGAL
+
+CFO: David Kim
+General Counsel: Sophie Martin
+Total Headcount: 12

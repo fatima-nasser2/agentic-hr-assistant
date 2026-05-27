@@ -1,0 +1,109 @@
+NovaTech Inc. — IT Guidelines & Tools Policy
+
+Last Updated: January 2024
+Maintained by: IT Department
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. APPROVED TOOLS & SOFTWARE
+
+Communication:
+- Slack — primary messaging tool (required for all employees)
+- Google Meet — video conferencing
+- Gmail — company email (@novatech.com)
+
+Project Management:
+- Notion — documentation, wikis, and project planning
+- Jira — engineering sprint and issue tracking
+- Linear — product roadmap management
+
+Development (Engineering only):
+- GitHub — code repository and version control
+- VS Code — recommended IDE (license provided)
+- Docker — containerization
+- AWS — cloud infrastructure
+
+Design:
+- Figma — UI/UX design (license provided for designers and PMs)
+- Miro — collaborative whiteboarding
+
+Finance & Operations:
+- Expensify — expense management
+- QuickBooks — accounting (Finance team only)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+2. EQUIPMENT POLICY
+
+Standard Equipment Package (all employees):
+- MacBook Pro 14" (M3 chip) — primary work device
+- External monitor (27")
+- Keyboard and mouse
+- NovaTech-branded accessories kit
+
+Additional Equipment for Engineers:
+- Second monitor
+- Ergonomic chair allowance ($300 one-time)
+
+Home Office Setup:
+- One-time home office stipend: $500
+- Monthly internet subsidy: $30 (fully remote employees only)
+
+Equipment Return:
+All equipment must be returned within 5 business days of
+termination of employment. Failure to return equipment will
+result in deduction from final paycheck.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+3. SECURITY POLICIES
+
+Password Requirements:
+- Minimum 12 characters
+- Must include uppercase, lowercase, numbers, and symbols
+- Must be changed every 90 days
+- Never reuse the last 5 passwords
+
+Two-Factor Authentication (2FA):
+- Mandatory for all company accounts
+- Use Google Authenticator or Authy
+- Hardware security keys available on request from IT
+
+VPN Usage:
+- Required when accessing company systems outside the office
+- NovaTech uses NordVPN Teams — credentials in your welcome email
+- Never connect to public WiFi without VPN
+
+Data Handling:
+- No customer data on personal devices
+- All sensitive documents must be stored in Google Drive
+- Do not share confidential files via personal email
+- Report any data breach immediately to security@novatech.com
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+4. SOFTWARE REQUESTS
+
+To request new software or tools:
+1. Submit a request via the IT portal: it.novatech.com
+2. Include the tool name, purpose, cost, and number of users
+3. IT will review within 3 business days
+4. Finance approval required for tools over $500/year
+
+Unauthorized software installation is prohibited and may
+result in disciplinary action.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+5. IT SUPPORT
+
+For all IT issues:
+- Slack: #it-help (fastest response)
+- Email: it-support@novatech.com
+- Portal: it.novatech.com/support
+
+Response times:
+- Critical (system down): 1 hour
+- High (can't work): 4 hours
+- Medium (workaround exists): 1 business day
+- Low (minor issue): 3 business days
