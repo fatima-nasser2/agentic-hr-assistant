@@ -11,12 +11,19 @@ class TokenResponse(BaseModel):
     token_type: str = "bearer"
     employee_id: str
     name: str
+    
+# ── CHAT HISTORY ─────────────────────────────────────────
+
+class ChatMessage(BaseModel):
+    role: Literal["user", "assistant"]
+    content: str
 
 # ── CHAT ─────────────────────────────────────────────────
 
 class ChatRequest(BaseModel):
     question: str = Field(..., min_length=1, max_length=5000)
     thread_id: Optional[str] = None  # for conversation memory
+    chat_history: Optional[List[ChatMessage]] = []
 
 class AgentTraceStep(BaseModel):
     node: str
@@ -30,6 +37,7 @@ class ChatResponse(BaseModel):
     agent_trace: List[AgentTraceStep]
     thread_id: str
     employee_id: str
+    chat_history: List[ChatMessage]
 
 # ── FEEDBACK ─────────────────────────────────────────────
 

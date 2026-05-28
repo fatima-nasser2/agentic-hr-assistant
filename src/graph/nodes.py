@@ -195,14 +195,23 @@ def rag_node(state: GraphState) -> GraphState:
     question = state["question"]
 
     llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+    
+    # ── Format chat history for context ──────────────────
+    history = state.get("chat_history", [])
+    history_text = "\n".join([
+        f"{msg['role'].upper()}: {msg['content']}"
+        for msg in history[-4:]
+    ]) if history else "No previous conversation."
 
     if attempts == 0:
         rewrite_prompt = ChatPromptTemplate.from_messages([
             ("system",
              "You are an expert at rewriting HR policy questions to improve document retrieval.\n"
-             "Rewrite the question to be more specific, include relevant HR terminology, "
-             "expand abbreviations, and make the intent crystal clear.\n"
-             "Return ONLY the rewritten question, nothing else."),
+             "You have access to recent conversation history to resolve pronouns and references.\n"
+             "Use the history to understand what 'them', 'it', 'this', 'that' refers to.\n"
+             "Rewrite the question to be fully self-contained, specific, and retrieval-friendly.\n"
+             "Return ONLY the rewritten question, nothing else.\n\n"
+             f"Recent conversation:\n{history_text}"),
             ("human", "Original question: {question}")
         ])
     else:

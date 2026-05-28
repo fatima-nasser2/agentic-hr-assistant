@@ -3,7 +3,7 @@ import json
 import uuid
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import StreamingResponse
-from api.models import ChatRequest, ChatResponse, AgentTraceStep
+from api.models import ChatRequest, ChatResponse, AgentTraceStep, ChatMessage
 from api.dependencies import get_current_employee
 from src.graph.graph import build_graph
 
@@ -64,7 +64,10 @@ async def chat(
         "relevance": "",
         "route": "",
         "retrieval_source": "",
-        "chat_history": [],
+        "chat_history": [
+            {"role": msg.role, "content": msg.content}
+            for msg in (request.chat_history or [])
+        ],
         "employee_id": employee_id
     }
 
@@ -83,13 +86,20 @@ async def chat(
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
     generation = final_state.get("generation", "")
+    
+    # Build updated history
+    updated_history = list(request.chat_history or [])
+    updated_history.append(ChatMessage(role="user", content=request.question))
+    updated_history.append(ChatMessage(role="assistant", content=generation))
+
     return ChatResponse(
         answer=generation,
         sources=_parse_sources(generation),
         retrieval_source=final_state.get("retrieval_source", "unknown"),
         agent_trace=agent_trace,
         thread_id=thread_id,
-        employee_id=employee_id
+        employee_id=employee_id,
+        chat_history=updated_history
     )
 
 # ── /chat/stream (streaming response) ───────────────────
@@ -115,7 +125,10 @@ async def chat_stream(
             "relevance": "",
             "route": "",
             "retrieval_source": "",
-            "chat_history": [],
+            "chat_history": [
+                {"role": msg.role, "content": msg.content}
+                for msg in (request.chat_history or [])
+            ],
             "employee_id": employee_id
         }
 
