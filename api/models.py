@@ -6,6 +6,12 @@ from typing import List, Literal, Optional
 class LoginRequest(BaseModel):
     employee_id: str
 
+    model_config = {
+        "json_schema_extra": {
+            "examples": [{"employee_id": "EMP000"}]
+        }
+    }
+
 class TokenResponse(BaseModel):
     access_token: str
     token_type: str = "bearer"
@@ -24,6 +30,18 @@ class ChatRequest(BaseModel):
     question: str = Field(..., min_length=1, max_length=5000)
     thread_id: Optional[str] = None  # for conversation memory
     chat_history: Optional[List[ChatMessage]] = []
+    
+    model_config = {
+        "json_schema_extra": {
+            "examples": [
+                {
+                    "question": "How many sick days do I have left?",
+                    "thread_id": None,
+                    "chat_history": []
+                }
+            ]
+        }
+    }
 
 class AgentTraceStep(BaseModel):
     node: str
@@ -47,6 +65,20 @@ class FeedbackRequest(BaseModel):
     answer: str
     rating: Literal["up", "down"]
     comment: Optional[str] = None
+    
+    model_config = {
+        "json_schema_extra": {
+            "examples": [
+                {
+                    "thread_id": "abc-123",
+                    "question": "How many sick days do I have left?",
+                    "answer": "You have 2 sick days left.",
+                    "rating": "up",
+                    "comment": "Very helpful!"
+                }
+            ]
+        }
+    }
 
 class FeedbackResponse(BaseModel):
     message: str
