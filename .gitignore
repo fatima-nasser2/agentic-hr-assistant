@@ -230,3 +230,11 @@ outputs/
 
 # Feedback data
 data/feedback.json
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.env.local
+frontend/.env.*.local
+frontend/.vite/
+frontend/.env
