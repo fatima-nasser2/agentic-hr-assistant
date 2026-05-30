@@ -29,6 +29,8 @@ export default function Layout({ employee, darkMode, onToggleDark, onLogout }) {
     switchConversation,
     sendMessage,
     clearChat,
+    renameConversation,
+    deleteConversation,
     giveFeedback,
   } = useConversations()
 
@@ -101,6 +103,8 @@ export default function Layout({ employee, darkMode, onToggleDark, onLogout }) {
             onNew={newConversation}
             onSwitch={handleSwitch}
             onCollapse={() => setSidebarOpen(false)}
+            onRename={renameConversation}
+            onDelete={deleteConversation}
             employee={employee}
             onLogout={onLogout}
           />

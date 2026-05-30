@@ -59,11 +59,20 @@ export function useConversations() {
     const assistantId = assistantMsg.id
     const title = messages.length === 0 ? truncate(question) : conv.title
 
-    setConversations(prev => prev.map(c =>
-      c.id === convId
-        ? { ...c, title, isLoading: true, messages: [...c.messages, userMsg, assistantMsg] }
-        : c
-    ))
+    setConversations(prev => {
+      const updated = prev.map(c =>
+        c.id === convId
+          ? { ...c, title, isLoading: true, messages: [...c.messages, userMsg, assistantMsg] }
+          : c
+      )
+      // Bubble the active conversation to the top
+      const idx = updated.findIndex(c => c.id === convId)
+      if (idx > 0) {
+        const [target] = updated.splice(idx, 1)
+        updated.unshift(target)
+      }
+      return updated
+    })
 
     let accumulatedContent = ''
 
@@ -128,6 +137,27 @@ export function useConversations() {
     ))
   }
 
+  const renameConversation = (id, title) => {
+    setConversations(prev => prev.map(c =>
+      c.id === id ? { ...c, title: title.trim() || c.title } : c
+    ))
+  }
+
+  const deleteConversation = (id) => {
+    setConversations(prev => {
+      const next = prev.filter(c => c.id !== id)
+      if (next.length === 0) {
+        const fresh = createConversation()
+        setActiveId(fresh.id)
+        return [fresh]
+      }
+      if (id === activeId) {
+        setActiveId(next[0].id)
+      }
+      return next
+    })
+  }
+
   const giveFeedback = async (message, rating) => {
     const conv = conversations.find(c => c.id === activeId)
     try {
@@ -145,6 +175,8 @@ export function useConversations() {
     switchConversation,
     sendMessage,
     clearChat,
+    renameConversation,
+    deleteConversation,
     giveFeedback,
   }
 }
