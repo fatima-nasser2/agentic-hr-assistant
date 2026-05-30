@@ -62,7 +62,8 @@ export function useChat() {
                     ...msg,
                     isStreaming: false,
                     sources: event.sources || [],
-                    retrieval_source: event.retrieval_source || ''
+                    retrieval_source: event.retrieval_source || '',
+                    evaluation: event.evaluation || null
                   }
                 : msg
             ))

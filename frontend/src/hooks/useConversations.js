@@ -104,7 +104,13 @@ export function useConversations() {
                   ],
                   messages: c.messages.map(m =>
                     m.id === assistantId
-                      ? { ...m, isStreaming: false, sources: event.sources || [], retrieval_source: event.retrieval_source || '' }
+                      ? {
+                          ...m,
+                          isStreaming: false,
+                          sources: event.sources || [],
+                          retrieval_source: event.retrieval_source || '',
+                          evaluation: event.evaluation || null,
+                        }
                       : m
                   ),
                 }

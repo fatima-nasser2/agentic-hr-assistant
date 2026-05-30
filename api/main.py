@@ -1,8 +1,16 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from api.routers import auth, chat, feedback, sources
+from src.database.query_engine import ensure_evaluations_table
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    ensure_evaluations_table()
+    yield
 
 app = FastAPI(
+    lifespan=lifespan,
     title="NovaTech HR Assistant API",
     description="""
 ## Agentic RAG HR Assistant

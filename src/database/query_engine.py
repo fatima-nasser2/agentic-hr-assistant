@@ -1,5 +1,7 @@
 import sqlite3
 import os
+import uuid
+from datetime import datetime
 from typing import List
 from langchain_core.documents import Document
 
@@ -66,3 +68,56 @@ Payroll Information:
         page_content=content,
         metadata={"source": "sql_database", "employee_id": employee_id}
     )]
+
+
+# ── EVALUATIONS ───────────────────────────────────────────
+
+def ensure_evaluations_table():
+    conn = get_connection()
+    try:
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS evaluations (
+                eval_id             TEXT PRIMARY KEY,
+                employee_id         TEXT NOT NULL,
+                thread_id           TEXT NOT NULL,
+                question            TEXT NOT NULL,
+                answer              TEXT NOT NULL,
+                retrieval_source    TEXT NOT NULL,
+                groundedness_score  REAL NOT NULL,
+                relevance_score     REAL NOT NULL,
+                completeness_score  REAL NOT NULL,
+                overall_score       REAL NOT NULL,
+                reasoning           TEXT NOT NULL,
+                timestamp           TEXT NOT NULL
+            )
+        """)
+        conn.commit()
+    finally:
+        conn.close()
+
+
+def save_evaluation(
+    employee_id: str,
+    thread_id: str,
+    question: str,
+    answer: str,
+    retrieval_source: str,
+    groundedness: float,
+    relevance: float,
+    completeness: float,
+    overall: float,
+    reasoning: str,
+) -> str:
+    eval_id = str(uuid.uuid4())
+    timestamp = datetime.utcnow().isoformat()
+    conn = get_connection()
+    try:
+        conn.execute(
+            "INSERT INTO evaluations VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            (eval_id, employee_id, thread_id, question, answer, retrieval_source,
+             groundedness, relevance, completeness, overall, reasoning, timestamp),
+        )
+        conn.commit()
+    finally:
+        conn.close()
+    return eval_id

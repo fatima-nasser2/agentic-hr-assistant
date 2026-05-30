@@ -4,6 +4,12 @@ import ReactMarkdown from 'react-markdown'
 import AgentTrace from './AgentTrace'
 import clsx from 'clsx'
 
+function evalDotColor(overall) {
+  if (overall >= 4.0) return 'bg-green-500'
+  if (overall >= 2.5) return 'bg-amber-400'
+  return 'bg-red-500'
+}
+
 export default function ChatMessage({ message, onFeedback }) {
   const [feedback, setFeedback] = useState(null)
 
@@ -13,21 +19,33 @@ export default function ChatMessage({ message, onFeedback }) {
   }
 
   const isUser = message.role === 'user'
+  const hasEval = !isUser && !message.isStreaming && message.evaluation
 
   return (
     <div className={clsx('flex gap-3 group', isUser && 'flex-row-reverse')}>
 
       {/* Avatar */}
-      <div className={clsx(
-        'w-7 h-7 rounded-full flex items-center justify-center shrink-0 mt-0.5',
-        isUser
-          ? 'bg-brand-500'
-          : 'bg-gray-100 dark:bg-gray-800'
-      )}>
-        {isUser
-          ? <User size={14} className="text-white" />
-          : <Bot size={14} className="text-gray-500 dark:text-gray-400" />
-        }
+      <div className="relative shrink-0 mt-0.5">
+        <div className={clsx(
+          'w-7 h-7 rounded-full flex items-center justify-center',
+          isUser
+            ? 'bg-brand-500'
+            : 'bg-gray-100 dark:bg-gray-800'
+        )}>
+          {isUser
+            ? <User size={14} className="text-white" />
+            : <Bot size={14} className="text-gray-500 dark:text-gray-400" />
+          }
+        </div>
+        {/* Quality dot — bottom-right of avatar */}
+        {hasEval && (
+          <span
+            className={clsx(
+              'absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full border-2 border-white dark:border-gray-950',
+              evalDotColor(message.evaluation.overall)
+            )}
+          />
+        )}
       </div>
 
       {/* Bubble */}
@@ -40,6 +58,7 @@ export default function ChatMessage({ message, onFeedback }) {
           <AgentTrace
             trace={message.trace}
             isStreaming={message.isStreaming}
+            evaluation={message.evaluation}
           />
         )}
 

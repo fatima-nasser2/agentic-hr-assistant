@@ -48,6 +48,14 @@ class AgentTraceStep(BaseModel):
     decision: Optional[str] = None
     details: Optional[str] = None
 
+class EvaluationScores(BaseModel):
+    groundedness: float
+    relevance: float
+    completeness: float
+    overall: float
+    reasoning: str
+    eval_id: Optional[str] = None
+
 class ChatResponse(BaseModel):
     answer: str
     sources: List[str]
@@ -56,6 +64,7 @@ class ChatResponse(BaseModel):
     thread_id: str
     employee_id: str
     chat_history: List[ChatMessage]
+    evaluation: Optional[EvaluationScores] = None
 
 # ── FEEDBACK ─────────────────────────────────────────────
 

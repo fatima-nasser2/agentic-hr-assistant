@@ -3,9 +3,11 @@ import json
 import uuid
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import StreamingResponse
-from api.models import ChatRequest, ChatResponse, AgentTraceStep, ChatMessage
+from api.models import ChatRequest, ChatResponse, AgentTraceStep, ChatMessage, EvaluationScores
 from api.dependencies import get_current_employee
 from src.graph.graph import build_graph
+from src.evaluation.evaluator import evaluate_answer
+from src.database.query_engine import save_evaluation
 
 router = APIRouter(prefix="/chat", tags=["Chat"])
 
@@ -21,21 +23,21 @@ def get_graph():
 
 def _build_trace_step(node_name: str, node_output: dict, employee_id: str) -> AgentTraceStep | None:
     if node_name == "router":
-        return AgentTraceStep(node="Router Agent", decision=node_output.get("route"), details="Classified question scope")
+        return AgentTraceStep(node="router", decision=node_output.get("route"), details="Classified question scope")
     if node_name == "source_router":
-        return AgentTraceStep(node="Source Router", decision=node_output.get("retrieval_source"), details="Selected retrieval source")
+        return AgentTraceStep(node="source_router", decision=node_output.get("retrieval_source"), details="Selected retrieval source")
     if node_name == "rag":
-        return AgentTraceStep(node="RAG Agent", decision=f"attempt #{node_output.get('retrieval_attempts')}", details=node_output.get("rewritten_question", ""))
+        return AgentTraceStep(node="rag", decision=f"attempt #{node_output.get('retrieval_attempts')}", details=node_output.get("rewritten_question", ""))
     if node_name == "sql":
-        return AgentTraceStep(node="SQL Agent", decision="queried database", details=f"Retrieved data for {employee_id}")
+        return AgentTraceStep(node="sql", decision="queried database", details=f"Retrieved data for {employee_id}")
     if node_name == "internal_kb":
-        return AgentTraceStep(node="Internal KB Agent", decision="searched knowledge base", details=node_output.get("rewritten_question", ""))
+        return AgentTraceStep(node="internal_kb", decision="searched knowledge base", details=node_output.get("rewritten_question", ""))
     if node_name == "grader":
-        return AgentTraceStep(node="Grader Agent", decision=node_output.get("relevance"), details="Scored chunk relevance")
+        return AgentTraceStep(node="grader", decision=node_output.get("relevance"), details="Scored chunk relevance")
     if node_name == "response":
-        return AgentTraceStep(node="Response Agent", decision="generated", details="Answer generated with citations")
+        return AgentTraceStep(node="response", decision="generated", details="Answer generated with citations")
     if node_name == "unknown":
-        return AgentTraceStep(node="Unknown Node", decision="out of scope", details="Question outside system scope")
+        return AgentTraceStep(node="unknown", decision="out of scope", details="Question outside system scope")
     return None
 
 def _parse_sources(generation: str) -> list[str]:
@@ -43,6 +45,33 @@ def _parse_sources(generation: str) -> list[str]:
         return []
     sources_line = generation.split("Sources:")[-1].strip()
     return [s.strip() for s in sources_line.split(",")]
+
+async def _run_and_save_evaluation(
+    question: str,
+    answer: str,
+    documents: list,
+    retrieval_source: str,
+    employee_id: str,
+    thread_id: str,
+) -> dict | None:
+    """Run evaluation and persist to DB. Returns the scores dict or None."""
+    scores = await evaluate_answer(question, answer, documents, retrieval_source)
+    if not scores:
+        return None
+    eval_id = save_evaluation(
+        employee_id=employee_id,
+        thread_id=thread_id,
+        question=question,
+        answer=answer,
+        retrieval_source=retrieval_source,
+        groundedness=scores["groundedness"],
+        relevance=scores["relevance"],
+        completeness=scores["completeness"],
+        overall=scores["overall"],
+        reasoning=scores["reasoning"],
+    )
+    scores["eval_id"] = eval_id
+    return scores
 
 # ── /chat (full response) ────────────────────────────────
 
@@ -86,20 +115,32 @@ async def chat(
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
     generation = final_state.get("generation", "")
-    
-    # Build updated history
+    retrieval_source = final_state.get("retrieval_source", "")
+    documents = final_state.get("documents", [])
+
     updated_history = list(request.chat_history or [])
     updated_history.append(ChatMessage(role="user", content=request.question))
     updated_history.append(ChatMessage(role="assistant", content=generation))
 
+    # Run evaluation for answered questions (not off-topic)
+    evaluation = None
+    if final_state.get("route") == "rag" and generation and retrieval_source:
+        scores = await _run_and_save_evaluation(
+            request.question, generation, documents,
+            retrieval_source, employee_id, thread_id,
+        )
+        if scores:
+            evaluation = EvaluationScores(**scores)
+
     return ChatResponse(
         answer=generation,
         sources=_parse_sources(generation),
-        retrieval_source=final_state.get("retrieval_source", "unknown"),
+        retrieval_source=retrieval_source,
         agent_trace=agent_trace,
         thread_id=thread_id,
         employee_id=employee_id,
-        chat_history=updated_history
+        chat_history=updated_history,
+        evaluation=evaluation,
     )
 
 # ── /chat/stream (streaming response) ───────────────────
@@ -151,13 +192,27 @@ async def chat_stream(
                     await asyncio.sleep(0)
 
             generation = final_state.get("generation", "")
+            retrieval_source = final_state.get("retrieval_source", "")
+            documents = final_state.get("documents", [])
+            route = final_state.get("route", "")
+
             words = generation.split(" ")
             for i, word in enumerate(words):
                 token = word if i == len(words) - 1 else word + " "
                 yield f"data: {json.dumps({'type': 'token', 'value': token})}\n\n"
                 await asyncio.sleep(0.03)
 
-            yield f"data: {json.dumps({'type': 'done', 'thread_id': thread_id, 'retrieval_source': final_state.get('retrieval_source', 'unknown'), 'sources': _parse_sources(generation), 'employee_id': employee_id})}\n\n"
+            # Run evaluation before done so scores arrive with completion
+            evaluation_data = None
+            if route == "rag" and generation and retrieval_source:
+                print(f"[Evaluation] Running for source={retrieval_source} route={route}")
+                evaluation_data = await _run_and_save_evaluation(
+                    request.question, generation, documents,
+                    retrieval_source, employee_id, thread_id,
+                )
+                print(f"[Evaluation] Result: {evaluation_data}")
+
+            yield f"data: {json.dumps({'type': 'done', 'thread_id': thread_id, 'retrieval_source': retrieval_source, 'sources': _parse_sources(generation), 'employee_id': employee_id, 'evaluation': evaluation_data})}\n\n"
 
         except Exception as e:
             yield f"data: {json.dumps({'type': 'error', 'message': str(e)})}\n\n"
