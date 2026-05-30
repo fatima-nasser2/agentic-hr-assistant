@@ -24,6 +24,43 @@ const NODE_COLORS = {
   unknown: 'text-red-500'
 }
 
+function humanizeTrace(node, decision, details) {
+  switch (node) {
+    case 'router':
+      return decision === 'rag'
+        ? 'Recognized as a work-related question — proceeding to find an answer'
+        : 'This question is outside the HR assistant scope'
+    case 'source_router':
+      if (decision === 'faiss') return 'Looking in the HR policy documents'
+      if (decision === 'sql') return 'Looking up your personal employee record'
+      if (decision === 'internal_kb') return 'Searching the company knowledge base'
+      if (decision === 'web') return 'Searching the web for current information'
+      return 'Selecting the best data source'
+    case 'rag':
+      if (details && details.includes('attempt #')) {
+        const attempt = details.replace('attempt #', '')
+        return attempt === '1'
+          ? `Searching for relevant policy sections`
+          : `First search wasn't specific enough — trying again with different keywords`
+      }
+      return 'Searching for relevant documents'
+    case 'sql':
+      return 'Retrieving your personal data from the employee database'
+    case 'internal_kb':
+      return 'Searching company announcements, team info, and guidelines'
+    case 'grader':
+      return decision === 'relevant'
+        ? 'Found relevant information — good to answer'
+        : 'Information not specific enough — will try again'
+    case 'response':
+      return 'Composing your answer with citations'
+    case 'unknown':
+      return 'This question is outside what I can help with'
+    default:
+      return details || decision || ''
+  }
+}
+
 export default function AgentTrace({ trace, isStreaming }) {
   const [expanded, setExpanded] = useState(false)
 
@@ -53,17 +90,18 @@ export default function AgentTrace({ trace, isStreaming }) {
 
       {/* Expanded trace */}
       {expanded && !isStreaming && (
-        <div className="mt-2 pl-3 border-l-2 border-gray-200 dark:border-gray-700 space-y-1.5">
+        <div className="mt-2 pl-3 border-l-2 border-gray-200 dark:border-gray-700 space-y-2">
           {trace.map((step, i) => (
-            <div key={`${step.node}-${i}`} className="flex items-start gap-2">
-              <span className={clsx('text-xs font-medium shrink-0', NODE_COLORS[step.node] || 'text-gray-500')}>
+            <div key={i} className="flex flex-col gap-0.5">
+              <span className={clsx(
+                'text-xs font-medium',
+                NODE_COLORS[step.node] || 'text-gray-500'
+              )}>
                 {NODE_LABELS[step.node] || step.node}
               </span>
-              {step.decision && (
-                <span className="text-xs text-gray-400 dark:text-gray-500">
-                  → {step.decision}
-                </span>
-              )}
+              <span className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
+                {humanizeTrace(step.node, step.decision, step.details)}
+              </span>
             </div>
           ))}
         </div>
