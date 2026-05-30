@@ -7,11 +7,16 @@ import ChatWindow from '../chat/ChatWindow'
 import { useConversations } from '../../hooks/useConversations'
 import { useMediaQuery } from '../../hooks/useMediaQuery'
 
+const MIN_WIDTH = 200
+const MAX_WIDTH = 480
+const DEFAULT_WIDTH = 260
+
 export default function Layout({ employee, darkMode, onToggleDark, onLogout }) {
   const isMobile = useMediaQuery('(max-width: 767px)')
   const [sidebarOpen, setSidebarOpen] = useState(!isMobile)
+  const [sidebarWidth, setSidebarWidth] = useState(DEFAULT_WIDTH)
+  const [isResizing, setIsResizing] = useState(false)
 
-  // Sync sidebar state when viewport crosses the breakpoint
   useEffect(() => {
     setSidebarOpen(!isMobile)
   }, [isMobile])
@@ -32,18 +37,40 @@ export default function Layout({ employee, darkMode, onToggleDark, onLogout }) {
     if (isMobile) setSidebarOpen(false)
   }
 
+  const startResize = (e) => {
+    e.preventDefault()
+    setIsResizing(true)
+    const startX = e.clientX
+    const startWidth = sidebarWidth
+
+    const onMouseMove = (e) => {
+      const next = Math.min(Math.max(startWidth + (e.clientX - startX), MIN_WIDTH), MAX_WIDTH)
+      setSidebarWidth(next)
+    }
+
+    const onMouseUp = () => {
+      setIsResizing(false)
+      window.removeEventListener('mousemove', onMouseMove)
+      window.removeEventListener('mouseup', onMouseUp)
+    }
+
+    window.addEventListener('mousemove', onMouseMove)
+    window.addEventListener('mouseup', onMouseUp)
+  }
+
   return (
-    <div className="h-screen flex flex-col bg-gray-50 dark:bg-gray-950">
+    <div className={clsx(
+      'h-screen flex flex-col bg-gray-50 dark:bg-gray-950',
+      isResizing && 'select-none cursor-ew-resize'
+    )}>
       <Header
-        employee={employee}
         darkMode={darkMode}
         onToggleDark={onToggleDark}
-        onLogout={onLogout}
       />
 
       <div className="flex-1 flex overflow-hidden relative">
 
-        {/* Mobile backdrop — tap to close */}
+        {/* Mobile backdrop */}
         {isMobile && sidebarOpen && (
           <div
             className="absolute inset-0 z-40 bg-black/40"
@@ -51,9 +78,7 @@ export default function Layout({ employee, darkMode, onToggleDark, onLogout }) {
           />
         )}
 
-        {/* Sidebar wrapper
-            Desktop: in-flow div that animates its width (pushes chat)
-            Mobile:  absolute overlay that slides in via transform        */}
+        {/* Sidebar wrapper — push on desktop, overlay on mobile */}
         <div
           className={clsx(
             isMobile
@@ -61,18 +86,33 @@ export default function Layout({ employee, darkMode, onToggleDark, onLogout }) {
                   'absolute left-0 top-0 h-full z-50 transition-transform duration-200',
                   sidebarOpen ? 'translate-x-0' : '-translate-x-full'
                 )
-              : 'shrink-0 overflow-hidden transition-[width] duration-200'
+              : clsx(
+                  'shrink-0 overflow-hidden z-10',
+                  sidebarOpen && 'shadow-[4px_0_16px_rgba(0,0,0,0.07)] dark:shadow-[4px_0_16px_rgba(0,0,0,0.3)]',
+                  !isResizing && 'transition-[width] duration-200'
+                )
           )}
-          style={!isMobile ? { width: sidebarOpen ? 240 : 0 } : undefined}
+          style={!isMobile ? { width: sidebarOpen ? sidebarWidth : 0 } : undefined}
         >
           <Sidebar
+            isMobile={isMobile}
             conversations={conversations}
             activeId={activeId}
             onNew={newConversation}
             onSwitch={handleSwitch}
             onCollapse={() => setSidebarOpen(false)}
+            employee={employee}
+            onLogout={onLogout}
           />
         </div>
+
+        {/* Resize handle — desktop only, sits on top of the shadow */}
+        {!isMobile && sidebarOpen && (
+          <div
+            onMouseDown={startResize}
+            className="w-1 shrink-0 self-stretch cursor-ew-resize z-20"
+          />
+        )}
 
         <main className="flex-1 overflow-hidden relative">
           {!sidebarOpen && (

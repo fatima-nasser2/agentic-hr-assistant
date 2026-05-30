@@ -28,34 +28,46 @@ function humanizeTrace(node, decision, details) {
   switch (node) {
     case 'router':
       return decision === 'rag'
-        ? 'Recognized as a work-related question — proceeding to find an answer'
+        ? 'Recognised as an HR question — searching for an answer'
         : 'This question is outside the HR assistant scope'
+
     case 'source_router':
-      if (decision === 'faiss') return 'Looking in the HR policy documents'
-      if (decision === 'sql') return 'Looking up your personal employee record'
+      if (decision === 'faiss')      return 'Searching HR policy documents'
+      if (decision === 'sql')        return 'Looking up your employee record'
       if (decision === 'internal_kb') return 'Searching the company knowledge base'
-      if (decision === 'web') return 'Searching the web for current information'
+      if (decision === 'web')        return 'Searching the web for current information'
       return 'Selecting the best data source'
-    case 'rag':
-      if (details && details.includes('attempt #')) {
-        const attempt = details.replace('attempt #', '')
-        return attempt === '1'
-          ? `Searching for relevant policy sections`
-          : `First search wasn't specific enough — trying again with different keywords`
+
+    case 'rag': {
+      // decision = "attempt #1", "attempt #2", …
+      // details  = the actual (rewritten) question sent to the retriever
+      const attempt = parseInt(decision?.match(/#(\d+)/)?.[1] ?? '1', 10)
+      if (attempt === 1) {
+        return details ? `Searching for: "${details}"` : 'Searching for relevant documents'
       }
-      return 'Searching for relevant documents'
+      return details
+        ? `Refining search — trying: "${details}"`
+        : 'Refining search with different keywords'
+    }
+
     case 'sql':
-      return 'Retrieving your personal data from the employee database'
+      // details = "Retrieved data for <employee_id>"
+      return details || 'Querying the employee database'
+
     case 'internal_kb':
-      return 'Searching company announcements, team info, and guidelines'
+      return 'Searching company knowledge base'
+
     case 'grader':
       return decision === 'relevant'
-        ? 'Found relevant information — good to answer'
-        : 'Information not specific enough — will try again'
+        ? 'Found relevant information — proceeding to answer'
+        : 'Information not specific enough — searching again'
+
     case 'response':
-      return 'Composing your answer with citations'
+      return 'Composing your answer'
+
     case 'unknown':
       return 'This question is outside what I can help with'
+
     default:
       return details || decision || ''
   }
