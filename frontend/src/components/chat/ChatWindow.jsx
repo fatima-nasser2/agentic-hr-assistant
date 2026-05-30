@@ -12,14 +12,16 @@ export default function ChatWindow({ employee, conversation, onSend, onClear, on
   }, [messages])
 
   return (
-    <div className="h-full flex flex-col max-w-3xl mx-auto px-4">
+    <div className="flex-1 flex flex-col min-h-0">
 
-      {/* Messages */}
-      <div className="flex-1 overflow-y-auto py-6 space-y-6 scrollbar-hidden">
+      {/* Scroll container — full width so the scrollbar sits at the viewport edge.
+          min-h-0 is required: without it the flex child won't shrink below its
+          content size, breaking the scroll context entirely.                     */}
+      <div className="flex-1 min-h-0 overflow-y-auto chat-scroll">
 
-        {/* Welcome state */}
-        {messages.length === 0 && (
-          <div className="flex flex-col items-center justify-center h-full text-center gap-4 pb-20">
+        {messages.length === 0 ? (
+          /* Welcome state — fills the scroll container so content is centred */
+          <div className="h-full flex flex-col items-center justify-center text-center gap-4 px-4 py-8">
             <div className="w-12 h-12 rounded-2xl bg-brand-500 flex items-center justify-center shadow-lg">
               <Bot size={24} className="text-white" />
             </div>
@@ -48,37 +50,40 @@ export default function ChatWindow({ employee, conversation, onSend, onClear, on
               ))}
             </div>
           </div>
+        ) : (
+          /* Messages — content centred inside the full-width scroll container */
+          <div className="max-w-3xl mx-auto w-full px-4 py-6 space-y-6">
+            {messages.map((message) => (
+              <ChatMessage
+                key={message.id}
+                message={message}
+                onFeedback={onFeedback}
+              />
+            ))}
+            <div ref={bottomRef} />
+          </div>
         )}
-
-        {/* Chat messages */}
-        {messages.map((message) => (
-          <ChatMessage
-            key={message.id}
-            message={message}
-            onFeedback={onFeedback}
-          />
-        ))}
-
-        <div ref={bottomRef} />
       </div>
 
-      {/* Input area */}
-      <div className="py-4 border-t border-gray-100 dark:border-gray-800">
-        <div className="flex items-center justify-between mb-3">
-          {messages.length > 0 && (
-            <button
-              onClick={onClear}
-              className="flex items-center gap-1.5 text-sm text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
-            >
-              <Trash2 size={12} />
-              Clear chat
-            </button>
-          )}
+      {/* Input — pinned to the bottom, never scrolls away */}
+      <div className="shrink-0 border-t border-gray-100 dark:border-gray-800">
+        <div className="max-w-3xl mx-auto w-full px-4 py-4">
+          <div className="flex items-center justify-between mb-3">
+            {messages.length > 0 && (
+              <button
+                onClick={onClear}
+                className="flex items-center gap-1.5 text-sm text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+              >
+                <Trash2 size={12} />
+                Clear chat
+              </button>
+            )}
+          </div>
+          <ChatInput onSend={onSend} disabled={isLoading} />
+          <p className="text-xs text-center text-gray-300 dark:text-gray-700 mt-2">
+            NovaTech HR Assistant · Powered by Agentic RAG
+          </p>
         </div>
-        <ChatInput onSend={onSend} disabled={isLoading} />
-        <p className="text-xs text-center text-gray-300 dark:text-gray-700 mt-2">
-          NovaTech HR Assistant · Powered by Agentic RAG
-        </p>
       </div>
     </div>
   )

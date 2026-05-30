@@ -114,7 +114,7 @@ export default function Layout({ employee, darkMode, onToggleDark, onLogout }) {
           />
         )}
 
-        <main className="flex-1 overflow-hidden relative">
+        <main className="flex-1 flex flex-col min-h-0 overflow-hidden relative">
           {!sidebarOpen && (
             <button
               onClick={() => setSidebarOpen(true)}
