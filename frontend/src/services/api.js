@@ -98,13 +98,14 @@ export const streamMessage = async (question, threadId, chatHistory, onEvent) =>
 
 // ── FEEDBACK ─────────────────────────────────────────────
 
-export const submitFeedback = async (threadId, question, answer, rating, comment) => {
+export const submitFeedback = async (threadId, question, answer, rating, comment, evalId) => {
   const response = await api.post('/feedback', {
     thread_id: threadId,
     question,
     answer,
     rating,
-    comment
+    comment,
+    eval_id: evalId || null,
   })
   return response.data
 }

@@ -166,8 +166,9 @@ export function useConversations() {
 
   const giveFeedback = async (message, rating) => {
     const conv = conversations.find(c => c.id === activeId)
+    const evalId = message.evaluation?.eval_id ?? null
     try {
-      await submitFeedback(conv.threadId, message.question, message.content, rating)
+      await submitFeedback(conv.threadId, message.question, message.content, rating, undefined, evalId)
     } catch (err) {
       console.error('Feedback error:', err)
     }

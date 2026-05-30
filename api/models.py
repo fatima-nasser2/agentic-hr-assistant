@@ -74,6 +74,7 @@ class FeedbackRequest(BaseModel):
     answer: str
     rating: Literal["up", "down"]
     comment: Optional[str] = None
+    eval_id: Optional[str] = None
     
     model_config = {
         "json_schema_extra": {

@@ -88,10 +88,19 @@ def ensure_evaluations_table():
                 completeness_score  REAL NOT NULL,
                 overall_score       REAL NOT NULL,
                 reasoning           TEXT NOT NULL,
-                timestamp           TEXT NOT NULL
+                timestamp           TEXT NOT NULL,
+                human_rating        TEXT,
+                human_comment       TEXT
             )
         """)
         conn.commit()
+        # Migrate existing tables that predate the human feedback columns
+        for col in ("human_rating TEXT", "human_comment TEXT"):
+            try:
+                conn.execute(f"ALTER TABLE evaluations ADD COLUMN {col}")
+                conn.commit()
+            except Exception:
+                pass  # column already exists
     finally:
         conn.close()
 
@@ -121,3 +130,15 @@ def save_evaluation(
     finally:
         conn.close()
     return eval_id
+
+
+def update_evaluation_feedback(eval_id: str, human_rating: str, human_comment: str | None = None) -> None:
+    conn = get_connection()
+    try:
+        conn.execute(
+            "UPDATE evaluations SET human_rating = ?, human_comment = ? WHERE eval_id = ?",
+            (human_rating, human_comment, eval_id),
+        )
+        conn.commit()
+    finally:
+        conn.close()

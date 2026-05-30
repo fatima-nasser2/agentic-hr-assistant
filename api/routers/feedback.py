@@ -5,6 +5,7 @@ from datetime import datetime, timezone
 from fastapi import APIRouter, Depends
 from api.models import FeedbackRequest, FeedbackResponse
 from api.dependencies import get_current_employee
+from src.database.query_engine import update_evaluation_feedback
 
 router = APIRouter(prefix="/feedback", tags=["Feedback"])
 
@@ -35,9 +36,14 @@ async def submit_feedback(
         "answer": request.answer,
         "rating": request.rating,
         "comment": request.comment,
+        "eval_id": request.eval_id,
         "timestamp": datetime.now(timezone.utc).isoformat()
     }
     save_feedback(feedback)
+
+    # Link human rating to the evaluation record when available
+    if request.eval_id:
+        update_evaluation_feedback(request.eval_id, request.rating, request.comment)
 
     return FeedbackResponse(
         message=f"Feedback recorded — thank you!",
