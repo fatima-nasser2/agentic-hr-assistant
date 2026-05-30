@@ -15,6 +15,19 @@ api.interceptors.request.use((config) => {
   return config
 })
 
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      // Token expired or invalid — clear storage and reload
+      localStorage.removeItem('token')
+      localStorage.removeItem('employee')
+      window.location.href = '/'
+    }
+    return Promise.reject(error)
+  }
+)
+
 // ── AUTH ─────────────────────────────────────────────────
 
 export const login = async (employeeId) => {
@@ -48,6 +61,13 @@ export const streamMessage = async (question, threadId, chatHistory, onEvent) =>
       chat_history: chatHistory
     })
   })
+
+  if (response.status === 401) {
+    localStorage.removeItem('token')
+    localStorage.removeItem('employee')
+    window.location.href = '/'
+    return
+  }
 
   if (!response.ok) {
     throw new Error(`Stream request failed: ${response.status} ${response.statusText}`)
