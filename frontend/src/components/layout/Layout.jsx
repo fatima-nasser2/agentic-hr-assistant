@@ -1,12 +1,20 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { PanelLeft } from 'lucide-react'
+import clsx from 'clsx'
 import Header from './Header'
 import Sidebar from './Sidebar'
 import ChatWindow from '../chat/ChatWindow'
 import { useConversations } from '../../hooks/useConversations'
+import { useMediaQuery } from '../../hooks/useMediaQuery'
 
 export default function Layout({ employee, darkMode, onToggleDark, onLogout }) {
-  const [sidebarOpen, setSidebarOpen] = useState(true)
+  const isMobile = useMediaQuery('(max-width: 767px)')
+  const [sidebarOpen, setSidebarOpen] = useState(!isMobile)
+
+  // Sync sidebar state when viewport crosses the breakpoint
+  useEffect(() => {
+    setSidebarOpen(!isMobile)
+  }, [isMobile])
 
   const {
     conversations,
@@ -19,6 +27,11 @@ export default function Layout({ employee, darkMode, onToggleDark, onLogout }) {
     giveFeedback,
   } = useConversations()
 
+  const handleSwitch = (id) => {
+    switchConversation(id)
+    if (isMobile) setSidebarOpen(false)
+  }
+
   return (
     <div className="h-screen flex flex-col bg-gray-50 dark:bg-gray-950">
       <Header
@@ -27,24 +40,41 @@ export default function Layout({ employee, darkMode, onToggleDark, onLogout }) {
         onToggleDark={onToggleDark}
         onLogout={onLogout}
       />
-      <div className="flex-1 flex overflow-hidden">
 
-        {/* Sidebar — animate width so the chat area slides smoothly */}
+      <div className="flex-1 flex overflow-hidden relative">
+
+        {/* Mobile backdrop — tap to close */}
+        {isMobile && sidebarOpen && (
+          <div
+            className="absolute inset-0 z-40 bg-black/40"
+            onClick={() => setSidebarOpen(false)}
+          />
+        )}
+
+        {/* Sidebar wrapper
+            Desktop: in-flow div that animates its width (pushes chat)
+            Mobile:  absolute overlay that slides in via transform        */}
         <div
-          className="shrink-0 overflow-hidden transition-[width] duration-200"
-          style={{ width: sidebarOpen ? 240 : 0 }}
+          className={clsx(
+            isMobile
+              ? clsx(
+                  'absolute left-0 top-0 h-full z-50 transition-transform duration-200',
+                  sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+                )
+              : 'shrink-0 overflow-hidden transition-[width] duration-200'
+          )}
+          style={!isMobile ? { width: sidebarOpen ? 240 : 0 } : undefined}
         >
           <Sidebar
             conversations={conversations}
             activeId={activeId}
             onNew={newConversation}
-            onSwitch={switchConversation}
+            onSwitch={handleSwitch}
             onCollapse={() => setSidebarOpen(false)}
           />
         </div>
 
         <main className="flex-1 overflow-hidden relative">
-          {/* Expand button — visible only when sidebar is closed */}
           {!sidebarOpen && (
             <button
               onClick={() => setSidebarOpen(true)}
@@ -54,7 +84,6 @@ export default function Layout({ employee, darkMode, onToggleDark, onLogout }) {
               <PanelLeft size={16} />
             </button>
           )}
-
           <ChatWindow
             key={activeConversation.id}
             employee={employee}
