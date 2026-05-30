@@ -41,7 +41,7 @@ export default function ChatWindow({ employee, conversation, onSend, onClear, on
                 <button
                   key={suggestion}
                   onClick={() => onSend(suggestion)}
-                  className="text-xs text-left px-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-600 dark:text-gray-400 hover:border-brand-500 hover:text-brand-500 transition-colors"
+                  className="text-sm text-left px-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-600 dark:text-gray-400 hover:border-brand-500 hover:text-brand-500 transition-colors"
                 >
                   {suggestion}
                 </button>
@@ -68,7 +68,7 @@ export default function ChatWindow({ employee, conversation, onSend, onClear, on
           {messages.length > 0 && (
             <button
               onClick={onClear}
-              className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+              className="flex items-center gap-1.5 text-sm text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
             >
               <Trash2 size={12} />
               Clear chat

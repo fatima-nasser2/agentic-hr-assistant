@@ -23,7 +23,7 @@ export default function Header({ employee, darkMode, onToggleDark, onLogout }) {
             <div className="w-5 h-5 rounded-full bg-brand-500 flex items-center justify-center text-white text-xs font-bold">
               {employee.name?.charAt(0)}
             </div>
-            <span className="text-xs font-medium text-gray-700 dark:text-gray-300">
+            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
               {employee.name}
             </span>
             <span className="text-xs text-gray-400 dark:text-gray-500">

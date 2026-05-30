@@ -71,7 +71,7 @@ export default function AgentTrace({ trace, isStreaming }) {
       {/* Toggle button */}
       <button
         onClick={() => setExpanded(!expanded)}
-        className="flex items-center gap-1.5 text-xs text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+        className="flex items-center gap-1.5 text-sm text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
       >
         <Brain size={12} />
         <span>
@@ -94,12 +94,12 @@ export default function AgentTrace({ trace, isStreaming }) {
           {trace.map((step, i) => (
             <div key={i} className="flex flex-col gap-0.5">
               <span className={clsx(
-                'text-xs font-medium',
+                'text-sm font-medium',
                 NODE_COLORS[step.node] || 'text-gray-500'
               )}>
                 {NODE_LABELS[step.node] || step.node}
               </span>
-              <span className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
+              <span className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
                 {humanizeTrace(step.node, step.decision, step.details)}
               </span>
             </div>

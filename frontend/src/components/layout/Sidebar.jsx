@@ -54,7 +54,7 @@ export default function Sidebar({ conversations, activeId, onNew, onSwitch, onCo
                 )}
               />
               <span className={clsx(
-                'text-xs font-medium truncate',
+                'text-sm font-medium truncate',
                 conv.id === activeId
                   ? 'text-brand-600 dark:text-brand-400'
                   : 'text-gray-600 dark:text-gray-400'
@@ -63,7 +63,7 @@ export default function Sidebar({ conversations, activeId, onNew, onSwitch, onCo
               </span>
             </div>
             {conv.isLoading && (
-              <p className="text-xs text-brand-400 mt-0.5 ml-5">Thinking…</p>
+              <p className="text-sm text-brand-400 mt-0.5 ml-5">Thinking…</p>
             )}
           </button>
         ))}
