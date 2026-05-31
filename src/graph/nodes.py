@@ -194,7 +194,7 @@ def rag_node(state: GraphState) -> GraphState:
     attempts = state.get("retrieval_attempts", 0)
     question = state["question"]
 
-    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0, timeout=30, max_retries=1)
+    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0, timeout=20, max_retries=1)
 
     # ── Format chat history for context ──────────────────
     history = state.get("chat_history", [])
@@ -225,13 +225,25 @@ def rag_node(state: GraphState) -> GraphState:
             ("human", "Original question: {question}")
         ])
 
-    rewrite_chain = rewrite_prompt | llm | StrOutputParser()
-    rewritten_question = rewrite_chain.invoke({"question": question})
+    print("🔍 RAG Agent: rewriting question...")
+    try:
+        rewrite_chain = rewrite_prompt | llm | StrOutputParser()
+        rewritten_question = rewrite_chain.invoke({"question": question})
+        print(f"🔍 RAG Agent: rewritten → {rewritten_question[:80]}")
+    except Exception as e:
+        print(f"🔍 RAG Agent: rewrite failed ({type(e).__name__}), using original")
+        rewritten_question = question
 
     index_path = INTERNAL_KB_INDEX if state.get("retrieval_source") == "internal_kb" else HR_POLICIES_INDEX
-    vectorstore = load_vectorstore(index_path)
-    retriever = vectorstore.as_retriever(search_kwargs={"k": 4})
-    documents = retriever.invoke(rewritten_question)
+    print("🔍 RAG Agent: querying FAISS index...")
+    try:
+        vectorstore = load_vectorstore(index_path)
+        retriever = vectorstore.as_retriever(search_kwargs={"k": 4})
+        documents = retriever.invoke(rewritten_question)
+        print(f"🔍 RAG Agent: retrieved {len(documents)} chunks")
+    except Exception as e:
+        print(f"🔍 RAG Agent: retrieval failed ({type(e).__name__})")
+        documents = []
 
     return {
         **state,
