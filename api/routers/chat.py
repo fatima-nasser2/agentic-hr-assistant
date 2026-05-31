@@ -207,23 +207,16 @@ async def chat_stream(
                 yield f"data: {json.dumps({'type': 'token', 'value': token})}\n\n"
                 await asyncio.sleep(0.03)
 
-            # Run evaluation with a timeout so done is always sent promptly
-            evaluation_data = None
+            # Send done immediately so the SSE connection closes before Railway times it out
+            yield f"data: {json.dumps({'type': 'done', 'thread_id': thread_id, 'retrieval_source': retrieval_source, 'sources': _parse_sources(generation), 'employee_id': employee_id, 'evaluation': None})}\n\n"
+
+            # Fire evaluation in the background — does not block the response
             if route == "rag" and generation and retrieval_source:
                 print(f"[Evaluation] Running for source={retrieval_source} route={route}")
-                try:
-                    evaluation_data = await asyncio.wait_for(
-                        _run_and_save_evaluation(
-                            request.question, generation, documents,
-                            retrieval_source, employee_id, thread_id,
-                        ),
-                        timeout=15.0,
-                    )
-                    print(f"[Evaluation] Result: {evaluation_data}")
-                except asyncio.TimeoutError:
-                    print("[Evaluation] Timed out after 15s, skipping")
-
-            yield f"data: {json.dumps({'type': 'done', 'thread_id': thread_id, 'retrieval_source': retrieval_source, 'sources': _parse_sources(generation), 'employee_id': employee_id, 'evaluation': evaluation_data})}\n\n"
+                asyncio.create_task(_run_and_save_evaluation(
+                    request.question, generation, documents,
+                    retrieval_source, employee_id, thread_id,
+                ))
 
         except Exception as e:
             yield f"data: {json.dumps({'type': 'error', 'message': str(e)})}\n\n"

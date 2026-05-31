@@ -64,6 +64,8 @@ async def evaluate_answer(
         llm = ChatOpenAI(
             model="gpt-4o-mini",
             temperature=0,
+            timeout=10,
+            max_retries=0,
             model_kwargs={"response_format": {"type": "json_object"}},
         )
         response = await llm.ainvoke([HumanMessage(content=prompt)])

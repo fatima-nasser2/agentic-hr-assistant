@@ -27,7 +27,7 @@ class RouteDecision(BaseModel):
 def router_node(state: GraphState) -> GraphState:
     print("🔀 Router: analyzing question...")
 
-    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0, timeout=30, max_retries=1)
     structured_llm = llm.with_structured_output(RouteDecision)
 
     chat_history = state.get("chat_history", [])
@@ -91,7 +91,7 @@ class SourceDecision(BaseModel):
 def source_router_node(state: GraphState) -> GraphState:
     print("🗄️ Source Router: deciding retrieval source...")
 
-    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0, timeout=30, max_retries=1)
     structured_llm = llm.with_structured_output(SourceDecision)
 
     prompt = ChatPromptTemplate.from_messages([
@@ -194,8 +194,8 @@ def rag_node(state: GraphState) -> GraphState:
     attempts = state.get("retrieval_attempts", 0)
     question = state["question"]
 
-    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
-    
+    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0, timeout=30, max_retries=1)
+
     # ── Format chat history for context ──────────────────
     history = state.get("chat_history", [])
     history_text = "\n".join([
@@ -262,7 +262,7 @@ def grader_node(state: GraphState) -> GraphState:
         print("⚖️  Grader decision: not_relevant — no documents retrieved")
         return {**state, "relevance": "not_relevant"}
 
-    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0, timeout=30, max_retries=1)
     structured_llm = llm.with_structured_output(GradeDecision)
 
     formatted_docs = "\n\n".join(
@@ -331,7 +331,7 @@ def response_node(state: GraphState) -> GraphState:
         for msg in chat_history[-4:]
     )
 
-    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0, timeout=30, max_retries=1)
     structured_llm = llm.with_structured_output(ResponseOutput)
 
     prompt = ChatPromptTemplate.from_messages([
@@ -361,7 +361,7 @@ def response_node(state: GraphState) -> GraphState:
 def unknown_node(state: GraphState) -> GraphState:
     print("❓ Unknown: question outside HR policy scope...")
 
-    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.3)
+    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.3, timeout=30, max_retries=1)
 
     prompt = ChatPromptTemplate.from_messages([
         ("system",
