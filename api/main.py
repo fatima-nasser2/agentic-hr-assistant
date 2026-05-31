@@ -22,8 +22,6 @@ def _build_indexes_if_missing():
             chunks = chunk_documents(docs)
             embed_and_store(chunks, index_path)
             print(f"{label} index ready.")
-        else:
-            print(f"{label} index already exists, skipping.")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
