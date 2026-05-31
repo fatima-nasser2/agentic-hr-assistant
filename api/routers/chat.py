@@ -1,6 +1,5 @@
 import asyncio
 import json
-import threading
 import uuid
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import StreamingResponse
@@ -106,8 +105,7 @@ async def chat(
     final_state = {}
 
     try:
-        events = await asyncio.to_thread(lambda: list(graph.stream(initial_state, config=config)))
-        for event in events:
+        async for event in graph.astream(initial_state, config=config):
             for node_name, node_output in event.items():
                 final_state.update(node_output)
                 step = _build_trace_step(node_name, node_output, employee_id)
@@ -179,28 +177,8 @@ async def chat_stream(
         final_state = {}
 
         try:
-            event_queue: asyncio.Queue = asyncio.Queue()
-            loop = asyncio.get_running_loop()
-
-            def run_graph():
-                try:
-                    for event in graph.stream(initial_state, config=config):
-                        loop.call_soon_threadsafe(event_queue.put_nowait, event)
-                except Exception as exc:
-                    loop.call_soon_threadsafe(event_queue.put_nowait, exc)
-                finally:
-                    loop.call_soon_threadsafe(event_queue.put_nowait, None)
-
-            threading.Thread(target=run_graph, daemon=True).start()
-
-            while True:
-                item = await event_queue.get()
-                if item is None:
-                    break
-                if isinstance(item, Exception):
-                    yield f"data: {json.dumps({'type': 'error', 'message': str(item)})}\n\n"
-                    return
-                for node_name, node_output in item.items():
+            async for event in graph.astream(initial_state, config=config):
+                for node_name, node_output in event.items():
                     final_state.update(node_output)
                     step = _build_trace_step(node_name, node_output, employee_id)
                     if step:
