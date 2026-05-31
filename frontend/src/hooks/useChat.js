@@ -55,6 +55,12 @@ export function useChat() {
                 ? { ...msg, content: msg.content + event.value }
                 : msg
             ))
+          } else if (event.type === 'error') {
+            setMessages(prev => prev.map(msg =>
+              msg.id === assistantId
+                ? { ...msg, content: event.message || 'An error occurred. Please try again.', isStreaming: false }
+                : msg
+            ))
           } else if (event.type === 'done') {
             setMessages(prev => prev.map(msg =>
               msg.id === assistantId

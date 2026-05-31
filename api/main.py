@@ -1,13 +1,35 @@
+import asyncio
+import os
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from api.routers import auth, chat, feedback, sources
 from src.database.query_engine import ensure_evaluations_table, ensure_hr_tables
+from src.ingestion import (
+    HR_POLICIES_RAW, INTERNAL_KB_RAW,
+    HR_POLICIES_INDEX, INTERNAL_KB_INDEX,
+    load_documents, chunk_documents, embed_and_store,
+)
+
+def _build_indexes_if_missing():
+    for label, raw_path, index_path in [
+        ("HR Policies", HR_POLICIES_RAW, HR_POLICIES_INDEX),
+        ("Internal KB", INTERNAL_KB_RAW, INTERNAL_KB_INDEX),
+    ]:
+        if not os.path.exists(os.path.join(index_path, "index.faiss")):
+            print(f"Building {label} FAISS index...")
+            docs = load_documents(raw_path)
+            chunks = chunk_documents(docs)
+            embed_and_store(chunks, index_path)
+            print(f"{label} index ready.")
+        else:
+            print(f"{label} index already exists, skipping.")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     ensure_hr_tables()
     ensure_evaluations_table()
+    await asyncio.to_thread(_build_indexes_if_missing)
     yield
 
 app = FastAPI(

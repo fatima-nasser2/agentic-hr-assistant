@@ -16,6 +16,7 @@ COPY src/ ./src/
 COPY data/ ./data/
 
 ENV PYTHONPATH=/app
+ENV PYTHONUNBUFFERED=1
 
 EXPOSE 8000
 
