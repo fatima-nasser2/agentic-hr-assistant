@@ -125,12 +125,18 @@ async def chat(
     # Run evaluation for answered questions (not off-topic)
     evaluation = None
     if final_state.get("route") == "rag" and generation and retrieval_source:
-        scores = await _run_and_save_evaluation(
-            request.question, generation, documents,
-            retrieval_source, employee_id, thread_id,
-        )
-        if scores:
-            evaluation = EvaluationScores(**scores)
+        try:
+            scores = await asyncio.wait_for(
+                _run_and_save_evaluation(
+                    request.question, generation, documents,
+                    retrieval_source, employee_id, thread_id,
+                ),
+                timeout=15.0,
+            )
+            if scores:
+                evaluation = EvaluationScores(**scores)
+        except asyncio.TimeoutError:
+            print("[Evaluation] Timed out after 15s, skipping")
 
     return ChatResponse(
         answer=generation,
@@ -201,15 +207,21 @@ async def chat_stream(
                 yield f"data: {json.dumps({'type': 'token', 'value': token})}\n\n"
                 await asyncio.sleep(0.03)
 
-            # Run evaluation before done so scores arrive with completion
+            # Run evaluation with a timeout so done is always sent promptly
             evaluation_data = None
             if route == "rag" and generation and retrieval_source:
                 print(f"[Evaluation] Running for source={retrieval_source} route={route}")
-                evaluation_data = await _run_and_save_evaluation(
-                    request.question, generation, documents,
-                    retrieval_source, employee_id, thread_id,
-                )
-                print(f"[Evaluation] Result: {evaluation_data}")
+                try:
+                    evaluation_data = await asyncio.wait_for(
+                        _run_and_save_evaluation(
+                            request.question, generation, documents,
+                            retrieval_source, employee_id, thread_id,
+                        ),
+                        timeout=15.0,
+                    )
+                    print(f"[Evaluation] Result: {evaluation_data}")
+                except asyncio.TimeoutError:
+                    print("[Evaluation] Timed out after 15s, skipping")
 
             yield f"data: {json.dumps({'type': 'done', 'thread_id': thread_id, 'retrieval_source': retrieval_source, 'sources': _parse_sources(generation), 'employee_id': employee_id, 'evaluation': evaluation_data})}\n\n"
 
