@@ -51,11 +51,12 @@ Route to 'rag' if the question is about ANY of these:
 - Personal employee data (leave balance, salary, review dates)
 - External HR topics, labor laws, or industry benchmarks
 - Internal company information: team structure, org chart, leadership, tools, systems
+  Examples: "Who is the CTO?", "Who leads the engineering team?", "What does the CEO do?"
 - Onboarding, first-day guides, IT setup, software requests
 - Any work or employment related topic
 
 Route to 'unknown' ONLY if the question is completely unrelated to work:
-- General knowledge questions (capitals, math, science)
+- General knowledge questions unrelated to Fatinova Technologies (capitals, math, science)
 - Personal advice unrelated to work
 - Technical coding help unrelated to Fatinova Technologies systems
 - Casual conversation with no work context
@@ -382,8 +383,9 @@ def unknown_node(state: GraphState) -> GraphState:
          "- If it is a greeting or small talk (e.g. 'hello', 'hi', 'how are you'), "
          "reply warmly, briefly introduce yourself, and invite them to ask an HR question.\n"
          "- If it is off-topic (e.g. coding help, general knowledge, personal advice), "
-         "politely explain that you can only answer questions about Fatinova Technologies HR policies "
-         "(leave, remote work, compensation, hiring, code of conduct).\n\n"
+         "politely explain that you can only answer questions about Fatinova Technologies — "
+         "HR policies (leave, remote work, compensation, hiring, code of conduct) "
+         "and internal company information (team structure, leadership, onboarding, IT guidelines).\n\n"
          "Keep your response short and friendly."),
         ("human", "{question}")
     ])

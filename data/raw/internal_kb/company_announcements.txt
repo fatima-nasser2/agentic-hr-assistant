@@ -52,9 +52,9 @@ Fatinova Technologies is pleased to announce the following benefits enhancements
 ANNOUNCEMENT 4: New CTO Appointment
 Date: March 15, 2024
 
-Fatinova Technologies is thrilled to announce the appointment of Sarah Chen as Chief Technology Officer. Sarah joins from Google DeepMind where she led AI infrastructure for 6 years. She will oversee all engineering, product, and AI initiatives at Fatinova Technologies.
+Fatinova Technologies is thrilled to announce the appointment of Fatima Nasser as Chief Technology Officer. Fatima joins from Google DeepMind where she led AI infrastructure for 6 years. She will oversee all engineering, product, and AI initiatives at Fatinova Technologies.
 
-Sarah's priorities for 2024:
+Fatima's priorities for 2024:
 - Modernize the core infrastructure stack
 - Build Fatinova Technologies's internal AI platform
 - Grow the engineering team by 30 additional hires
