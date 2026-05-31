@@ -140,7 +140,11 @@ def save_evaluation(
     conn = get_connection()
     try:
         conn.execute(
-            "INSERT INTO evaluations VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            """INSERT INTO evaluations
+               (eval_id, employee_id, thread_id, question, answer, retrieval_source,
+                groundedness_score, relevance_score, completeness_score, overall_score,
+                reasoning, timestamp)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
             (eval_id, employee_id, thread_id, question, answer, retrieval_source,
              groundedness, relevance, completeness, overall, reasoning, timestamp),
         )
