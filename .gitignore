@@ -219,7 +219,7 @@ __marimo__/
 
 
 # data/raw/*
-data/processed/faiss_index
+data/processed/*
 data/hr_database.db
 
 .env
