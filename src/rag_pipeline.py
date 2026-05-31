@@ -15,7 +15,11 @@ load_dotenv()
 def load_vectorstore(index_path: str = None):
     if index_path is None:
         index_path = HR_POLICIES_INDEX
-    embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
+    embeddings = OpenAIEmbeddings(
+        model="text-embedding-3-small",
+        timeout=30,
+        max_retries=1,
+    )
     vectorstore = FAISS.load_local(
         index_path,
         embeddings,
