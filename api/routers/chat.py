@@ -122,21 +122,21 @@ async def chat(
     updated_history.append(ChatMessage(role="user", content=request.question))
     updated_history.append(ChatMessage(role="assistant", content=generation))
 
-    # Run evaluation for answered questions (not off-topic)
+    # Evaluate only vector-search results; SQL data doesn't need LLM grounding check
     evaluation = None
-    if final_state.get("route") == "rag" and generation and retrieval_source:
+    if final_state.get("route") == "rag" and generation and retrieval_source in ("faiss", "internal_kb"):
         try:
             scores = await asyncio.wait_for(
                 _run_and_save_evaluation(
                     request.question, generation, documents,
                     retrieval_source, employee_id, thread_id,
                 ),
-                timeout=15.0,
+                timeout=8.0,
             )
             if scores:
                 evaluation = EvaluationScores(**scores)
-        except asyncio.TimeoutError:
-            print("[Evaluation] Timed out after 15s, skipping")
+        except Exception as e:
+            print(f"[Evaluation] Skipped: {type(e).__name__}")
 
     return ChatResponse(
         answer=generation,
@@ -207,16 +207,23 @@ async def chat_stream(
                 yield f"data: {json.dumps({'type': 'token', 'value': token})}\n\n"
                 await asyncio.sleep(0.03)
 
-            # Send done immediately so the SSE connection closes before Railway times it out
-            yield f"data: {json.dumps({'type': 'done', 'thread_id': thread_id, 'retrieval_source': retrieval_source, 'sources': _parse_sources(generation), 'employee_id': employee_id, 'evaluation': None})}\n\n"
-
-            # Fire evaluation in the background — does not block the response
-            if route == "rag" and generation and retrieval_source:
+            # Evaluate only vector-search results; SQL data doesn't need LLM grounding check
+            evaluation_data = None
+            if route == "rag" and generation and retrieval_source in ("faiss", "internal_kb"):
                 print(f"[Evaluation] Running for source={retrieval_source} route={route}")
-                asyncio.create_task(_run_and_save_evaluation(
-                    request.question, generation, documents,
-                    retrieval_source, employee_id, thread_id,
-                ))
+                try:
+                    evaluation_data = await asyncio.wait_for(
+                        _run_and_save_evaluation(
+                            request.question, generation, documents,
+                            retrieval_source, employee_id, thread_id,
+                        ),
+                        timeout=8.0,
+                    )
+                    print(f"[Evaluation] Result: {evaluation_data}")
+                except Exception as e:
+                    print(f"[Evaluation] Skipped: {type(e).__name__}")
+
+            yield f"data: {json.dumps({'type': 'done', 'thread_id': thread_id, 'retrieval_source': retrieval_source, 'sources': _parse_sources(generation), 'employee_id': employee_id, 'evaluation': evaluation_data})}\n\n"
 
         except Exception as e:
             yield f"data: {json.dumps({'type': 'error', 'message': str(e)})}\n\n"
