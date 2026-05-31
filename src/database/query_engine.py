@@ -70,6 +70,24 @@ Payroll Information:
     )]
 
 
+# ── STARTUP INIT ──────────────────────────────────────────
+
+def ensure_hr_tables():
+    """Create and seed HR tables if they don't exist (handles fresh container deployments)."""
+    conn = get_connection()
+    try:
+        cursor = conn.cursor()
+        cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='employees'")
+        exists = cursor.fetchone()
+    finally:
+        conn.close()
+
+    if not exists:
+        os.makedirs(os.path.dirname(os.path.abspath(DB_PATH)), exist_ok=True)
+        from src.database.setup_db import create_database
+        create_database()
+
+
 # ── EVALUATIONS ───────────────────────────────────────────
 
 def ensure_evaluations_table():

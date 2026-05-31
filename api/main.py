@@ -2,10 +2,11 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from api.routers import auth, chat, feedback, sources
-from src.database.query_engine import ensure_evaluations_table
+from src.database.query_engine import ensure_evaluations_table, ensure_hr_tables
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    ensure_hr_tables()
     ensure_evaluations_table()
     yield
 
