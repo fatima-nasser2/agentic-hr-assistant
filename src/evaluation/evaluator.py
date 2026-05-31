@@ -64,7 +64,7 @@ async def evaluate_answer(
         llm = ChatOpenAI(
             model="gpt-4o-mini",
             temperature=0,
-            timeout=10,
+            timeout=20,
             max_retries=0,
             model_kwargs={"response_format": {"type": "json_object"}},
         )
