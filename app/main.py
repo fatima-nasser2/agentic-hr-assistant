@@ -13,7 +13,7 @@ from src.ingestion import (
 
 # ── PAGE CONFIG ──────────────────────────────────────────
 st.set_page_config(
-    page_title="NovaTech HR Assistant",
+    page_title="Fatinova Technologies HR Assistant",
     page_icon="🤖",
     layout="wide"
 )
@@ -38,7 +38,7 @@ def get_graph():
     return build_graph()
 
 # ── HEADER ───────────────────────────────────────────────
-st.title("🤖 NovaTech HR Assistant")
+st.title("🤖 Fatinova Technologies HR Assistant")
 st.caption("Powered by Agentic RAG — LangGraph + FAISS + GPT-4o mini")
 st.divider()
 
@@ -66,7 +66,7 @@ with col1:
     if not st.session_state.messages:
         with st.chat_message("assistant"):
             st.markdown(
-                "👋 Hi! I'm the **NovaTech HR Assistant**. I can answer questions about:\n\n"
+                "👋 Hi! I'm the **Fatinova Technologies HR Assistant**. I can answer questions about:\n\n"
                 "- 🏖️ Leave & time-off policies\n"
                 "- 🏠 Remote work & hybrid arrangements\n"
                 "- 💰 Compensation & benefits\n"
@@ -150,7 +150,7 @@ with col1:
 with st.sidebar:
     st.header("ℹ️ About")
     st.markdown("""
-    **NovaTech HR Assistant** is an Agentic RAG system built with:
+    **Fatinova Technologies HR Assistant** is an Agentic RAG system built with:
     - 🔗 **LangGraph** — agent orchestration
     - 🔍 **FAISS** — vector search
     - 🧠 **GPT-4o mini** — reasoning

@@ -8,7 +8,7 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from src.database.query_engine import get_employee_info
 
 # ── JWT CONFIG ───────────────────────────────────────────
-SECRET_KEY = os.getenv("JWT_SECRET_KEY", "novatech-secret-key-change-in-production")
+SECRET_KEY = os.getenv("JWT_SECRET_KEY")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_HOURS = 8
 

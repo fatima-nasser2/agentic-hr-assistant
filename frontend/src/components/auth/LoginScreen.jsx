@@ -26,7 +26,7 @@ export default function LoginScreen({ onLogin, loading, error, darkMode, onToggl
             <Bot size={32} className="text-white" />
           </div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-            NovaTech HR Assistant
+            Fatinova Technologies HR Assistant
           </h1>
           <p className="text-gray-500 dark:text-gray-400 mt-1 text-sm">
             Powered by Agentic RAG

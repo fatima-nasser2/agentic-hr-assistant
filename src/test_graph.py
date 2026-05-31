@@ -67,9 +67,9 @@ TESTS = {
     #     ("How many sick days do I have left?", ""),   # no ID — should ask for it
     # ],
     "Internal KB - SOURCE ROUTING": [
-        "Who is the CTO of NovaTech?",
+        "Who is the CTO of Fatinova Technologies?",
         "Who is on the engineering team?",
-        "What tools does NovaTech use for project management?",
+        "What tools does Fatinova Technologies use for project management?",
         "What happens in my first 30 days?",
         "How do I request new software?",
         "What should I do on my first day?",

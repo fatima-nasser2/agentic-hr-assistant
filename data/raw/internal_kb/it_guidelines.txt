@@ -1,4 +1,4 @@
-NovaTech Inc. — IT Guidelines & Tools Policy
+Fatinova Technologies Inc. — IT Guidelines & Tools Policy
 
 Last Updated: January 2024
 Maintained by: IT Department
@@ -10,7 +10,7 @@ Maintained by: IT Department
 Communication:
 - Slack — primary messaging tool (required for all employees)
 - Google Meet — video conferencing
-- Gmail — company email (@novatech.com)
+- Gmail — company email (@fatinovatechnologies.com)
 
 Project Management:
 - Notion — documentation, wikis, and project planning
@@ -39,7 +39,7 @@ Standard Equipment Package (all employees):
 - MacBook Pro 14" (M3 chip) — primary work device
 - External monitor (27")
 - Keyboard and mouse
-- NovaTech-branded accessories kit
+- Fatinova Technologies-branded accessories kit
 
 Additional Equipment for Engineers:
 - Second monitor
@@ -71,21 +71,21 @@ Two-Factor Authentication (2FA):
 
 VPN Usage:
 - Required when accessing company systems outside the office
-- NovaTech uses NordVPN Teams — credentials in your welcome email
+- Fatinova Technologies uses NordVPN Teams — credentials in your welcome email
 - Never connect to public WiFi without VPN
 
 Data Handling:
 - No customer data on personal devices
 - All sensitive documents must be stored in Google Drive
 - Do not share confidential files via personal email
-- Report any data breach immediately to security@novatech.com
+- Report any data breach immediately to security@fatinovatechnologies.com
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 4. SOFTWARE REQUESTS
 
 To request new software or tools:
-1. Submit a request via the IT portal: it.novatech.com
+1. Submit a request via the IT portal: it.fatinovatechnologies.com
 2. Include the tool name, purpose, cost, and number of users
 3. IT will review within 3 business days
 4. Finance approval required for tools over $500/year
@@ -99,8 +99,8 @@ result in disciplinary action.
 
 For all IT issues:
 - Slack: #it-help (fastest response)
-- Email: it-support@novatech.com
-- Portal: it.novatech.com/support
+- Email: it-support@fatinovatechnologies.com
+- Portal: it.fatinovatechnologies.com/support
 
 Response times:
 - Critical (system down): 1 hour

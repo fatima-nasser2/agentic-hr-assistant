@@ -37,7 +37,7 @@ export default function ChatWindow({ employee, conversation, onSend, onClear, on
               {[
                 'How many sick days do I have left?',
                 'What is the parental leave policy?',
-                'Who is the CTO of NovaTech?',
+                'Who is the CTO of Fatinova Technologies?',
                 'When is my next performance review?',
               ].map((suggestion) => (
                 <button
@@ -81,7 +81,7 @@ export default function ChatWindow({ employee, conversation, onSend, onClear, on
           </div>
           <ChatInput onSend={onSend} disabled={isLoading} />
           <p className="text-xs text-center text-gray-300 dark:text-gray-700 mt-2">
-            NovaTech HR Assistant · Powered by Agentic RAG
+            Fatinova Technologies HR Assistant · Powered by Agentic RAG
           </p>
         </div>
       </div>

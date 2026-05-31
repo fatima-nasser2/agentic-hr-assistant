@@ -37,7 +37,7 @@ def router_node(state: GraphState) -> GraphState:
     )
 
     prompt = ChatPromptTemplate.from_messages([
-        ("system", """You are a router for an HR policy assistant at NovaTech Inc.
+        ("system", """You are a router for an HR policy assistant at Fatinova Technologies Inc.
 
 Your job is to decide whether a question is work-related or completely off-topic.
 
@@ -57,7 +57,7 @@ Route to 'rag' if the question is about ANY of these:
 Route to 'unknown' ONLY if the question is completely unrelated to work:
 - General knowledge questions (capitals, math, science)
 - Personal advice unrelated to work
-- Technical coding help unrelated to NovaTech systems
+- Technical coding help unrelated to Fatinova Technologies systems
 - Casual conversation with no work context
 
 Be inclusive. When in doubt, route to 'rag'.
@@ -95,7 +95,7 @@ def source_router_node(state: GraphState) -> GraphState:
     structured_llm = llm.with_structured_output(SourceDecision)
 
     prompt = ChatPromptTemplate.from_messages([
-        ("system", """You are a retrieval source router for NovaTech's HR Assistant.
+        ("system", """You are a retrieval source router for Fatinova Technologies's HR Assistant.
 
 Your job is to decide which data source to query based on the question.
 
@@ -105,7 +105,7 @@ Available sources:
    Use when the question is about:
    - Company policies (leave, remote work, hiring, compensation structure, code of conduct)
    - Rules, entitlements, and procedures that apply to ALL employees
-   - How things work at NovaTech in general
+   - How things work at Fatinova Technologies in general
    Examples:
    - "What is the sick leave policy?"
    - "How does the hiring process work?"
@@ -130,7 +130,7 @@ Available sources:
    - IT guidelines, tools, and internal systems
    Examples:
    - "Who is on the engineering team?"
-   - "What tools does NovaTech use?"
+   - "What tools does Fatinova Technologies use?"
    - "What should I do on my first day?"
    - "How do I set up my laptop?"
    - "What was announced at the last all-hands?"
@@ -348,7 +348,7 @@ def response_node(state: GraphState) -> GraphState:
 
     prompt = ChatPromptTemplate.from_messages([
         ("system",
-         "You are an HR policy assistant for NovaTech Inc.\n\n"
+         "You are an HR policy assistant for Fatinova Technologies Inc.\n\n"
          "Answer the question using ONLY the provided policy excerpts.\n"
          "Do NOT use any outside knowledge.\n"
          "Be specific — include exact numbers, dates, or rules where available.\n"
@@ -377,12 +377,12 @@ def unknown_node(state: GraphState) -> GraphState:
 
     prompt = ChatPromptTemplate.from_messages([
         ("system",
-         "You are the NovaTech HR Assistant.\n\n"
+         "You are the Fatinova Technologies HR Assistant.\n\n"
          "The user's message is not an HR policy question. Respond based on what it is:\n\n"
          "- If it is a greeting or small talk (e.g. 'hello', 'hi', 'how are you'), "
          "reply warmly, briefly introduce yourself, and invite them to ask an HR question.\n"
          "- If it is off-topic (e.g. coding help, general knowledge, personal advice), "
-         "politely explain that you can only answer questions about NovaTech HR policies "
+         "politely explain that you can only answer questions about Fatinova Technologies HR policies "
          "(leave, remote work, compensation, hiring, code of conduct).\n\n"
          "Keep your response short and friendly."),
         ("human", "{question}")

@@ -1,17 +1,17 @@
-NovaTech Inc. — Code of Conduct
+Fatinova Technologies Inc. — Code of Conduct
 Document Version: 3.1
 Effective Date: January 1, 2024
 Last Reviewed: March 15, 2024
 Owner: People Operations Team
 
 1. Purpose
-This Code of Conduct defines the standards of behavior expected of every NovaTech employee. It exists to ensure that NovaTech remains a safe, respectful, and high-performing workplace for everyone.
+This Code of Conduct defines the standards of behavior expected of every Fatinova Technologies employee. It exists to ensure that Fatinova Technologies remains a safe, respectful, and high-performing workplace for everyone.
 
 2. Scope
-This policy applies to all employees, contractors, and anyone acting on behalf of NovaTech Inc., in any location and in any context — including offices, remote environments, client sites, and company events.
+This policy applies to all employees, contractors, and anyone acting on behalf of Fatinova Technologies Inc., in any location and in any context — including offices, remote environments, client sites, and company events.
 
 3. Core Principles
-NovaTech expects every employee to demonstrate:
+Fatinova Technologies expects every employee to demonstrate:
 
 Integrity — act honestly and transparently in all situations
 Respect — treat every person with dignity regardless of their role or background
@@ -29,14 +29,14 @@ Offensive jokes, comments, or imagery — including those shared via messaging t
 
 4.2 Discrimination
 
-NovaTech prohibits discrimination on the basis of gender, age, nationality, religion, disability, sexual orientation, or any other protected characteristic
+Fatinova Technologies prohibits discrimination on the basis of gender, age, nationality, religion, disability, sexual orientation, or any other protected characteristic
 Any discriminatory behavior must be reported immediately to People Operations
 
 4.3 Conflict of Interest
 
-Employees must disclose any personal or financial interest that could conflict with their duties at NovaTech
+Employees must disclose any personal or financial interest that could conflict with their duties at Fatinova Technologies
 Outside employment must be disclosed to People Operations if it involves a competitor or could affect performance
-Employees may not use NovaTech resources, relationships, or information for personal gain
+Employees may not use Fatinova Technologies resources, relationships, or information for personal gain
 
 4.4 Confidentiality
 
@@ -53,13 +53,13 @@ Employees may not install unauthorized software on company devices
 4.6 Social Media
 
 Employees must not share confidential company information on social media
-Personal opinions expressed online must not be presented as NovaTech's official position
-NovaTech's social media policy provides detailed guidance and is available on the HR portal
+Personal opinions expressed online must not be presented as Fatinova Technologies's official position
+Fatinova Technologies's social media policy provides detailed guidance and is available on the HR portal
 
 
 5. Health and Safety
 
-NovaTech is committed to providing a safe working environment
+Fatinova Technologies is committed to providing a safe working environment
 Employees must report any safety concerns or incidents to their manager or the Facilities team immediately
 Employees must not attend work under the influence of alcohol or controlled substances
 
@@ -69,22 +69,22 @@ Employees must not attend work under the influence of alcohol or controlled subs
 Employees who witness or experience a violation of this Code must report it via:
 
 Direct manager — for non-sensitive issues
-People Operations — at people@novatech.com
-Anonymous ethics hotline — available 24/7 at ethics.novatech.com
+People Operations — at people@Fatinova Technologies.com
+Anonymous ethics hotline — available 24/7 at ethics.Fatinova Technologies.com
 
 
 All reports are treated with strict confidentiality
-NovaTech does not tolerate retaliation against anyone who reports a concern in good faith
+Fatinova Technologies does not tolerate retaliation against anyone who reports a concern in good faith
 
 
 7. Consequences of Violations
 Violations of this Code will result in disciplinary action proportionate to the severity of the breach, up to and including termination of employment. Serious violations may also be referred to relevant legal authorities.
 
 8. Acknowledgment
-All employees are required to sign an acknowledgment of this Code of Conduct upon joining NovaTech and annually thereafter. Acknowledgments are stored in the HR portal.
+All employees are required to sign an acknowledgment of this Code of Conduct upon joining Fatinova Technologies and annually thereafter. Acknowledgments are stored in the HR portal.
 
 9. Policy Review
 This Code is reviewed annually by People Operations and the Legal team.
-For questions contact: people@novatech.com
-Ethics Hotline: ethics.novatech.com
-People Operations Team — NovaTech Inc.
+For questions contact: people@fatinovatechnologies.com
+Ethics Hotline: ethics.fatinovatechnologies.com
+People Operations Team — Fatinova Technologies Inc.

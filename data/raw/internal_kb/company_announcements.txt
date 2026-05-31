@@ -1,4 +1,4 @@
-NovaTech Inc. — Company Announcements & Updates
+Fatinova Technologies Inc. — Company Announcements & Updates
 
 Last Updated: January 2024
 Maintained by: People Operations & Executive Team
@@ -9,26 +9,26 @@ ANNOUNCEMENT 1: Q1 2024 Company All-Hands Summary
 Date: January 15, 2024
 
 CEO Message:
-NovaTech closed 2023 with record revenue growth of 34% year-over-year. We expanded our engineering team by 40% and launched three major product features. Our focus for 2024 is operational excellence, AI integration across all products, and expanding into the MENA region.
+Fatinova Technologies closed 2023 with record revenue growth of 34% year-over-year. We expanded our engineering team by 40% and launched three major product features. Our focus for 2024 is operational excellence, AI integration across all products, and expanding into the MENA region.
 
 Key Highlights:
 - Total headcount grew from 87 to 142 employees in 2023
 - Opened new office in Dubai, UAE
-- Launched NovaTech AI Suite — our flagship product update
+- Launched Fatinova Technologies AI Suite — our flagship product update
 - Achieved ISO 27001 certification for information security
 
 2024 Company Priorities:
 1. Expand AI capabilities across all product lines
 2. Grow the MENA market presence
 3. Achieve profitability by Q3 2024
-4. Launch NovaTech mobile application
+4. Launch Fatinova Technologies mobile application
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ANNOUNCEMENT 2: New Office Guidelines — Hybrid Work Update
 Date: February 1, 2024
 
-Effective February 1, 2024, NovaTech is updating its hybrid work guidelines:
+Effective February 1, 2024, Fatinova Technologies is updating its hybrid work guidelines:
 - Minimum office days increased from 1 to 2 days per week
 - Tuesday and Thursday are designated company-wide office days
 - Hot desking available on all other days
@@ -40,7 +40,7 @@ Effective February 1, 2024, NovaTech is updating its hybrid work guidelines:
 ANNOUNCEMENT 3: Employee Benefits Update 2024
 Date: March 1, 2024
 
-NovaTech is pleased to announce the following benefits enhancements effective Q2 2024:
+Fatinova Technologies is pleased to announce the following benefits enhancements effective Q2 2024:
 - Mental health sessions increased from 6 to 10 per year
 - New childcare support allowance of $200/month for employees with children under 5
 - Gym membership now covers premium tier gyms (previously standard only)
@@ -52,11 +52,11 @@ NovaTech is pleased to announce the following benefits enhancements effective Q2
 ANNOUNCEMENT 4: New CTO Appointment
 Date: March 15, 2024
 
-NovaTech is thrilled to announce the appointment of Sarah Chen as Chief Technology Officer. Sarah joins from Google DeepMind where she led AI infrastructure for 6 years. She will oversee all engineering, product, and AI initiatives at NovaTech.
+Fatinova Technologies is thrilled to announce the appointment of Sarah Chen as Chief Technology Officer. Sarah joins from Google DeepMind where she led AI infrastructure for 6 years. She will oversee all engineering, product, and AI initiatives at Fatinova Technologies.
 
 Sarah's priorities for 2024:
 - Modernize the core infrastructure stack
-- Build NovaTech's internal AI platform
+- Build Fatinova Technologies's internal AI platform
 - Grow the engineering team by 30 additional hires
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

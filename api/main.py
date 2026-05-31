@@ -32,7 +32,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     lifespan=lifespan,
-    title="NovaTech HR Assistant API",
+    title="Fatinova Technologies HR Assistant API",
     description="""
 ## Agentic RAG HR Assistant
 

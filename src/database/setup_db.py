@@ -71,7 +71,7 @@ def create_database():
         job_title = random.choice(titles)
         hire_date = fake.date_between(start_date="-5y", end_date="today")
         name = fake.name()
-        email = f"{name.lower().replace(' ', '.').replace(',', '')}.{emp_id.lower()}@novatech.com"
+        email = f"{name.lower().replace(' ', '.').replace(',', '')}.{emp_id.lower()}@fatinovatechnologies.com"
 
         employees.append((
             emp_id, name, email, department,
@@ -84,7 +84,7 @@ def create_database():
 
     # ── ADD A KNOWN TEST EMPLOYEE ─────────────────────────
     employees.append((
-        "EMP000", "Fatima Nasser", "fatima.nasser.emp000@novatech.com",
+        "EMP000", "Fatima Nasser", "fatima.nasser.emp000@fatinovatechnologies.com",
         "Engineering", "AI Engineer",
         "2023-01-15", managers.get("Engineering"),
         "active"

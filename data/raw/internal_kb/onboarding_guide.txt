@@ -1,6 +1,6 @@
-NovaTech Inc. — New Employee Onboarding Guide
+Fatinova Technologies Inc. — New Employee Onboarding Guide
 
-Welcome to NovaTech! This guide will help you get set up and productive
+Welcome to Fatinova Technologies! This guide will help you get set up and productive
 in your first 30 days.
 
 Last Updated: January 2024
@@ -10,10 +10,10 @@ Maintained by: People Operations
 
 BEFORE YOUR FIRST DAY
 
-1. Check your NovaTech email — your IT setup instructions will be sent there
-2. Complete your employment paperwork via the HR portal: hr.novatech.com
+1. Check your Fatinova Technologies email — your IT setup instructions will be sent there
+2. Complete your employment paperwork via the HR portal: hr.Fatinova Technologies.com
 3. Review the Employee Handbook sent to your personal email
-4. Download Slack and join with your NovaTech email
+4. Download Slack and join with your Fatinova Technologies email
 5. Your manager will reach out to schedule your Day 1 welcome call
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -60,9 +60,9 @@ IMPORTANT CONTACTS
 
 Your Manager: listed in your offer letter
 HR Business Partner: listed in your welcome email
-IT Support: it-support@novatech.com | Slack: #it-help
-People Operations: people@novatech.com
-Office Manager: office@novatech.com
+IT Support: it-support@fatinovatechnologies.com | Slack: #it-help
+People Operations: people@fatinovatechnologies.com
+Office Manager: office@fatinovatechnologies.com
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -71,7 +71,7 @@ KEY TOOLS & SYSTEMS
 Communication: Slack (primary), Email (formal)
 Project Management: Notion + Jira
 Code Repository: GitHub (engineering only)
-HR Portal: hr.novatech.com
+HR Portal: hr.fatinovatechnologies.com
 Finance & Expenses: Expensify
 Video Calls: Google Meet
 Document Storage: Google Drive
@@ -89,9 +89,9 @@ A: Use Expensify. All expenses must be submitted within 30 days.
    Expenses over $100 require manager approval before submission.
 
 Q: Where do I find my payslips?
-A: All payslips are available in the HR portal at hr.novatech.com
+A: All payslips are available in the HR portal at hr.fatinovatechnologies.com
    under My Documents > Payslips.
 
 Q: Who do I contact if I have an HR question?
-A: Contact your HR Business Partner or email people@novatech.com.
+A: Contact your HR Business Partner or email people@fatinovatechnologies.com.
    For urgent matters, use the HR portal's live chat feature.

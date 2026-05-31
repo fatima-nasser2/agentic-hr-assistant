@@ -1,5 +1,5 @@
 ---
-title: NovaTech HR Assistant
+title: Fatinova Technologies HR Assistant
 emoji: 🤖
 colorFrom: blue
 colorTo: indigo
@@ -10,7 +10,7 @@ app_file: app/main.py
 pinned: false
 ---
 
-# NovaTech HR Assistant
+# Fatinova Technologies HR Assistant
 
 [![Live Demo](https://img.shields.io/badge/🤗%20Hugging%20Face-Live%20Demo-blue)](https://huggingface.co/spaces/fatiman123/agentic-hr-assistant) [![React App](https://img.shields.io/badge/React-Live%20Demo-61dafb)](https://agentic-hr-assistant.vercel.app)
 [![FastAPI](https://img.shields.io/badge/API-FastAPI-009688)](https://fastapi.tiangolo.com)

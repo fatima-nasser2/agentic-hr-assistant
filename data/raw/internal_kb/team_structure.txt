@@ -1,4 +1,4 @@
-NovaTech Inc. — Team Structure & Organization
+Fatinova Technologies Inc. — Team Structure & Organization
 
 Last Updated: January 2024
 Maintained by: People Operations
@@ -26,7 +26,7 @@ Sub-teams:
    - Lead: Ana Petrova
 
 2. AI & Machine Learning (12 engineers)
-   - Owns NovaTech AI Suite, LLM integrations, and data pipelines
+   - Owns Fatinova Technologies AI Suite, LLM integrations, and data pipelines
    - Lead: Omar Khalil
    - Includes: AI Engineers, ML Engineers, Data Scientists
 

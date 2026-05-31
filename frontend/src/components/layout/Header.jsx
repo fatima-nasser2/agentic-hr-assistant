@@ -10,7 +10,7 @@ export default function Header({ darkMode, onToggleDark }) {
           <Bot size={16} className="text-white" />
         </div>
         <span className="font-semibold text-gray-900 dark:text-white text-sm">
-          NovaTech HR Assistant
+          Fatinova Technologies HR Assistant
         </span>
       </div>
 
